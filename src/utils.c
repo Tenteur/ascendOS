@@ -7,10 +7,8 @@
 #include <SDL2/SDL_ttf.h>
 #include "../include/utils.h"
 
-signed int drawCircleAtCoord(SDL_Renderer *renderer, int x, int y, float radius, const int precision, SDL_Color color) {
-    // const int segments = 10;
+signed int drawCircleAtCoord(SDL_Renderer *renderer, const int x, const int y, const float radius, const int precision, const SDL_Color color) {
     const float increment = 2.0f * 3.14 / precision;
-
     SDL_Vertex vertices[precision + 2];
 
     // Centre du cercle
@@ -36,12 +34,11 @@ signed int drawCircleAtCoord(SDL_Renderer *renderer, int x, int y, float radius,
             return -1;
         }
     }
-
     return 0;
 }
 
 
-transitionProperties *transitionBackgroundColorInit(SDL_Color *startingColor, SDL_Color *endingColor, int transitionNumberFrames) {
+transitionProperties *transitionBackgroundColorInit(SDL_Color *startingColor, SDL_Color *endingColor, const int transitionNumberFrames) {
     transitionProperties backgroundTransition = {
         startingColor, 
         (endingColor->r - startingColor->r) / transitionNumberFrames,

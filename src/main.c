@@ -1,37 +1,42 @@
 /*
     TODO: The transition function semi-work (only one time per launch), figure out a way to make it work every time
     TODO: Clean the code and use a bit less the HEAP and a bit more the MALLOC function (for some variables, i don't know).
+    TODO: Rewrite completely the transition functions.
+    TODO: Remove all the useless comments (code, etc a)
 */
+
 #include <time.h>
 #include <math.h>
 #include <stdint.h>
 #include <unistd.h>
 #include <stdbool.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
+
 #include "../include/utils.h"
 
-// already imported:
-// #include <SDL2/SDL.h>
-// #include <SDL2/SDL_ttf.h>
 
-SDL_Color SDLRedColor = {255, 0, 0, 255};
-SDL_Color SDLGreenColor = {0, 255, 0, 255};
-SDL_Color SDLBlueColor = {0, 0, 255, 255};
-bool isUsingVsync = true;
+const SDL_Color SDLRedColor = {255, 0, 0, 255};
+const SDL_Color SDLGreenColor = {0, 255, 0, 255};
+const SDL_Color SDLBlueColor = {0, 0, 255, 255};
+bool isUsingVsync = true; // Not really used. TODO: Will be modified
 
-int main(int argc, char *argv[]) {
+int main(const int argc, const char *argv[]) {
 
     // INITIALIZING all the variables that are going to be used. TODO: Maybe clean this area, some variables may be unused.
-    int circlePrecision = 100;
-    bool inTransition, isStillInTransition = false;
-    transitionProperties *transitionPtr;
-    long frameStartTime, frameTime;
-    double fps;
-    int roundedFps = 0;
-    long timeTakenForFrameToDraw = 16;
-    SDL_Rect FPSLocation = {650, 0, 150, 200};
-    SDL_Rect backgroundColorBox = { 200, 150, 400, 300 };
+    int circlePrecision = 100; // TODO: Move this variable
+    bool inTransition, isStillInTransition = false; // TODO: Will be removed
+    transitionProperties *transitionPtr; // TODO: Will be removed
+    long frameStartTime, frameTime; // TODO: Move these variables
+    double fps; // TODO: Remove or move these variables
+    int roundedFps = 0; // TODO: Remove this variable
+    
+    SDL_Rect FPSLocation = {650, 0, 150, 200}; // TODO: Move or remove this variable
+    SDL_Rect backgroundColorBox = { 200, 150, 400, 300 }; // TODO: Move or remove this variable
 
-    SDL_Rect *whatToMove = &FPSLocation;
+    SDL_Rect *whatToMove = &FPSLocation; // TODO: Move or remove this variable
+
+    // Variables definition finished. Initialization of SDL2
 
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER);
     TTF_Init();
@@ -42,6 +47,9 @@ int main(int argc, char *argv[]) {
     bool running = true;
     AppState state = STATE_LOGIN;
 
+    // SDL2 Initilialized, program running
+
+    // Clean this mess, maybe create a function to remember each input and reactions.
     while (running) {
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
