@@ -1,8 +1,8 @@
 /*
-    TODO: The transition function semi-work (only one time per launch), figure out a way to make it work every time
-    TODO: Clean the code and use a bit less the HEAP and a bit more the MALLOC function (for some variables, i don't know).
-    TODO: Rewrite completely the transition functions.
-    TODO: Remove all the useless comments (code, etc a)
+    ! // TODO: The transition function semi-work (only one time per launch), figure out a way to make it work every time
+    ! // TODO: Clean the code and use a bit less the HEAP and a bit more the MALLOC function (for some variables, i don't know).
+    ! // TODO: Rewrite completely the transition functions.
+    ! // TODO: Remove all the useless comments (code, etc a)
 */
 
 #include <time.h>
@@ -16,40 +16,42 @@
 #include "../include/utils.h"
 
 
-const SDL_Color SDLRedColor = {255, 0, 0, 255};
-const SDL_Color SDLGreenColor = {0, 255, 0, 255};
-const SDL_Color SDLBlueColor = {0, 0, 255, 255};
-bool isUsingVsync = true; // Not really used. TODO: Will be modified
+SDL_Color SDLRedColor = {255, 0, 0, 255};
+SDL_Color SDLGreenColor = {0, 255, 0, 255};
+SDL_Color SDLBlueColor = {0, 0, 255, 255};
+bool isUsingVsync = true; // ! Not really used. // TODO: Will be modified
 
 int main(const int argc, const char *argv[]) {
 
-    // INITIALIZING all the variables that are going to be used. TODO: Maybe clean this area, some variables may be unused.
-    int circlePrecision = 100; // TODO: Move this variable
-    bool inTransition, isStillInTransition = false; // TODO: Will be removed
-    transitionProperties *transitionPtr; // TODO: Will be removed
-    long frameStartTime, frameTime; // TODO: Move these variables
-    double fps; // TODO: Remove or move these variables
-    int roundedFps = 0; // TODO: Remove this variable
+    // * INITIALIZING all the variables that are going to be used.
+    // ! // FIXME: Maybe clean this area, some variables may be unused.
+    int circlePrecision = 100; // ? // TODO: Move this variable
+    bool inTransition, isStillInTransition = false; // ! // TODO: Will be removed
+    transitionProperties *transitionPtr; // ! // TODO: Will be removed
+    long frameStartTime, frameTime; // ? // TODO: Move these variables
+    double fps; // ? // TODO: Remove or move these variables
+    int roundedFps = 0; // ! // TODO: Remove this variable
     
-    SDL_Rect FPSLocation = {650, 0, 150, 200}; // TODO: Move or remove this variable
-    SDL_Rect backgroundColorBox = { 200, 150, 400, 300 }; // TODO: Move or remove this variable
+    SDL_Rect FPSLocation = {650, 0, 150, 200}; // ? // TODO: Move or remove this variable
+    SDL_Rect backgroundColorBox = { 200, 150, 400, 300 }; // ? // TODO: Move or remove this variable
 
-    SDL_Rect *whatToMove = &FPSLocation; // TODO: Move or remove this variable
+    SDL_Rect *whatToMove = &FPSLocation; // ? // TODO: Move or remove this variable
 
-    // Variables definition finished. Initialization of SDL2
+    // * Variables definition finished. Initialization of SDL2
 
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER);
     TTF_Init();
-    TTF_Font *TTFSDLFont = TTF_OpenFont("/home/vianney/VSCode/appSDL/static/Roboto-Regular.ttf", 10);
+    utilsInit();
+    TTF_Font *TTFSDLFont = TTF_OpenFont("/home/vianney/VSCode/appSDL/static/Roboto-Regular.ttf", 200);
     SDL_Window *window = SDL_CreateWindow("First UI", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, 0); // SDL_WINDOW_FULLSCREEN
     SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
     bool running = true;
     AppState state = STATE_LOGIN;
 
-    // SDL2 Initilialized, program running
+    // * SDL2 Initilialized, program running
 
-    // Clean this mess, maybe create a function to remember each input and reactions.
+    // ! // TODO: Clean this mess, maybe create a function to remember each input and reactions.
     while (running) {
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
@@ -69,7 +71,7 @@ int main(const int argc, const char *argv[]) {
                     inTransition = !inTransition;
                     if (inTransition) {
                         printf("Currently in transition\n");
-                        transitionPtr = transitionBackgroundColorInit(&SDLRedColor, &SDLBlueColor, (int)240);
+                        transitionPtr = transitionBackgroundColorInit(&SDLRedColor, &SDLBlueColor, 240);
                     } else { printf("Currently NOT in transition\n"); }
                 } else if(event.key.keysym.sym == SDLK_v) {
                     SDL_DestroyRenderer(renderer);
@@ -155,6 +157,8 @@ int main(const int argc, const char *argv[]) {
         SDL_DestroyTexture(FPSTexture);
         SDL_FreeSurface(FPSSurface);
 
+        SDL_Rect tempRect = {100, 100, 200, 200};
+        renderTextAtCoord(renderer, TTFSDLFont, "Hello world!", 100, 100, &SDLGreenColor, true, &tempRect);
 
         SDL_RenderPresent(renderer);
         // end = SDL_GetTicks64();
@@ -171,6 +175,8 @@ int main(const int argc, const char *argv[]) {
 
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
+    TTF_Quit();
+    utilsQuit();
     SDL_Quit();
     return 0;
 }
