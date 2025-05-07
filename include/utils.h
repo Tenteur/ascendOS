@@ -1,12 +1,12 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 
-typedef enum {
+typedef enum AppState {
     STATE_LOGIN,
     STATE_HOME
 } AppState;
 
-typedef struct {
+typedef struct transitionProperties {
     SDL_Color *currentSDLColor;
     double red;
     double green;
@@ -15,16 +15,23 @@ typedef struct {
     int remainingFrames;
 } transitionProperties;
 
-typedef struct {
+typedef struct shapeProperties {
     int numberOfVertices;
     SDL_Vertex vertices[];
 } shapeProperties;
 
-typedef struct {
+typedef struct textureDataStruct {
     SDL_Texture *texturePtr;
     int h;
     int w;
 } textureDataStruct;
+
+typedef struct fontListStruct {
+    char fontName[20];
+    int fontSize;
+    TTF_Font *fontPtr;
+    struct fontListStruct *next;
+} fontListStruct;
 
 // Used to initialize and remove the utils variables
 int utilsInit();
@@ -39,6 +46,11 @@ transitionProperties *transitionBackgroundColorInit(SDL_Color *startingColor, SD
 bool transitionBackgroundColorNextFrame(SDL_Renderer *renderer, transitionProperties *transitionPropertiesItem);
 
 // Render a text at x,y coord with a SDL_Color specified and size
-int renderTextAtCoord(SDL_Renderer *renderer, TTF_Font *TTFSDLFont, char *text, const int x, const int y, SDL_Color *textColor, bool useCustomSize, SDL_Rect *customSizeRect);
+int renderTextAtCoord(SDL_Renderer *renderer, char *text, const int x, const int y, SDL_Color *textColor, bool useCustomSize, SDL_Rect *customSizeRect);
 // Generate text texture and return it as a pointer
-SDL_Texture *generateTextTexture(SDL_Renderer *renderer, TTF_Font *TTFSDLFont, const char *text, const SDL_Color *textColor);
+SDL_Texture *generateTextTexture(SDL_Renderer *renderer, const char *text, const SDL_Color *textColor);
+// Return a pointer of a font based on the name and size asked
+// TTF_Font *getFontPointer(char fontName[], int fontSize);
+signed int addFontToList(char *fontName, int fontSize);
+signed int selectFontFromList(char *fontName, int fontSize);
+signed int removeFontFromList(char fontName, int fontSize);

@@ -38,19 +38,23 @@ int main(const int argc, const char *argv[]) {
     SDL_Rect *whatToMove = &FPSLocation; // ? // TODO: Move or remove this variable
 
     // * Variables definition finished. Initialization of SDL2
-
+    
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER);
     TTF_Init();
     utilsInit();
-    TTF_Font *TTFSDLFont = TTF_OpenFont("/home/vianney/VSCode/appSDL/static/Roboto-Regular.ttf", 200);
+    
     SDL_Window *window = SDL_CreateWindow("First UI", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, 0); // SDL_WINDOW_FULLSCREEN
     SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-
+    
     bool running = true;
     AppState state = STATE_LOGIN;
-
+    
     // * SDL2 Initilialized, program running
 
+    addFontToList("Roboto-Regular", 10);
+    addFontToList("BebasNeue-Regular", 100);
+    addFontToList("CascadiaMono-Regular", 100);
+    addFontToList("DancingScript-Regular", 100);
     // ! // TODO: Clean this mess, maybe create a function to remember each input and reactions.
     while (running) {
         SDL_Event event;
@@ -61,6 +65,7 @@ int main(const int argc, const char *argv[]) {
                     state = (state == STATE_LOGIN) ? STATE_HOME : STATE_LOGIN;
                 } else if (event.key.keysym.sym == SDLK_ESCAPE) {
                     running = false;
+                    break;
                 } else if (event.key.keysym.sym == SDLK_c) {
                     if (whatToMove == &FPSLocation) {
                         whatToMove = &backgroundColorBox;
@@ -110,12 +115,8 @@ int main(const int argc, const char *argv[]) {
         
         frameStartTime = SDL_GetTicks64();
 
-        // printf("%d\n", (1000/16) - timeTakenForFrameToDraw);
         char currentFPS[3];
         sprintf(currentFPS, "%u", (int)roundedFps);
-        // SDL_Delay((1000/16) - timeTakenForFrameToDraw);
-        SDL_Surface *FPSSurface = TTF_RenderText_Blended(TTFSDLFont, currentFPS, SDLBlueColor);
-        SDL_Texture *FPSTexture = SDL_CreateTextureFromSurface(renderer, FPSSurface);
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Clear screen
         SDL_RenderClear(renderer);
         
@@ -128,12 +129,13 @@ int main(const int argc, const char *argv[]) {
             isStillInTransition = transitionBackgroundColorNextFrame(renderer, transitionPtr);
             if (!isStillInTransition) {
                 inTransition = false;
-                printf("Finished transition!\n");
                 free(transitionPtr);
             }
-        } else { printf("Nothing is happening\n"); }
+        }
         
         SDL_RenderFillRect(renderer, &backgroundColorBox);
+
+        // This is the RGB triangle
         SDL_Surface *tempSurface = SDL_CreateRGBSurface(0, 100, 100, 32, 0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000);
         SDL_Texture *tempTexture = SDL_CreateTextureFromSurface(renderer, tempSurface);
         SDL_Vertex point1 = {{10, 10}, {255, 0, 0, 255}, {0, 0}};
@@ -141,9 +143,6 @@ int main(const int argc, const char *argv[]) {
         SDL_Vertex point3 = {{100, 100}, {0, 0, 255, 255}, {0, 0}};
         SDL_Vertex point4 = {{200, 150}, {255, 255, 255, 255}, {0, 0}};
         SDL_Vertex tempVertex[] = { point1, point2, point3, point1, point4, point2 };
-        // if (result == -1) printf("Got an error with the geometry\n");
-        // else if (result == 0) printf("Got no error with the geometry\n");
-        // else printf("Don't know why i got no result ?\n");
         
         SDL_Color tempColor = {255, 255, 255, 255};
         drawCircleAtCoord(renderer, 100, 100, 100, circlePrecision, tempColor);
@@ -153,24 +152,22 @@ int main(const int argc, const char *argv[]) {
         SDL_FreeSurface(tempSurface);
         SDL_DestroyTexture(tempTexture);
         
-        SDL_RenderCopy(renderer, FPSTexture, NULL, &FPSLocation);
-        SDL_DestroyTexture(FPSTexture);
-        SDL_FreeSurface(FPSSurface);
-
         SDL_Rect tempRect = {100, 100, 200, 200};
-        renderTextAtCoord(renderer, TTFSDLFont, "Hello world!", 100, 100, &SDLGreenColor, true, &tempRect);
+        selectFontFromList("Roboto-Regular", 100);
+        renderTextAtCoord(renderer, "Hello world!", 100, 100, &SDLGreenColor, true, &tempRect);
+        // selectFontFromList("BebasNeue-Regular", 100);
+        // renderTextAtCoord(renderer, "Hello world!", 100, 100, &SDLGreenColor, false, NULL);
+        // selectFontFromList("DancingScript-Regular", 100);
+        // renderTextAtCoord(renderer, "world!", 500, 100, &SDLBlueColor, false, NULL);
+        // selectFontFromList("CascadiaMono-Regular", 100);
+        renderTextAtCoord(renderer, currentFPS, FPSLocation.x, FPSLocation.y, &SDLBlueColor, false, NULL);
 
         SDL_RenderPresent(renderer);
-        // end = SDL_GetTicks64();
-        // timeTakenForFrameToDraw = end - start; // Already in ms (i think) !
         frameTime = SDL_GetTicks() - frameStartTime;
         if (frameTime > 0) {
             fps = 1000.0f / frameTime;
             roundedFps = (int)round(fps);
-            // printf("Frame Time: %d ms | FPS: %.2f\n", frameTime, fps);
         }
-        // SDL_RenderDrawLines
-        // printf("Time taken for drawing a frame: %dms\n", timeTakenForFrameToDraw);
     };
 
     SDL_DestroyRenderer(renderer);
