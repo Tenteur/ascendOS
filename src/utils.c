@@ -1,3 +1,9 @@
+/**
+ * @file utils.c
+ * @brief utils.c contains implementation of functions declared in utils.h
+ * These functions are used to draw on screen and do some derivative things.
+ */
+
 #include <time.h>
 #include <math.h>
 #include <string.h>
@@ -8,11 +14,10 @@
 #include <SDL2/SDL_ttf.h>
 #include "../include/utils.h"
 
-// TTF_Font *TTFSDLFont;
-
-// ! // TODO: Clean this file, this is a little mess
+// ! // @TODO: Clean this file, this is a little mess
 
 struct fontListStruct *allFontsListStart = NULL;
+/// Store the pointer of the current font in use
 TTF_Font *currentFontInUse = NULL;
 
 int utilsInit() {
@@ -36,7 +41,7 @@ int utilsQuit() {
 
 // Text rendering segment:
 
-// ! // TODO: check if font already exists (by using selectFontFromList maybe ?)
+// ! // @TODO: check if font already exists (by using selectFontFromList maybe ?)
 signed int addFontToList(char *fontName, int fontSize) {
     if (strcmp(fontName, "default") == 0) {
         currentFontInUse = allFontsListStart->fontPtr;
@@ -86,7 +91,7 @@ SDL_Texture *generateTextTexture(SDL_Renderer *renderer, const char *text, const
 }
 // ? This function seems to work overall.
 // ! TODO: Clean this function
-int renderTextAtCoord(SDL_Renderer *renderer, char *text, const int x, const int y, SDL_Color *textColor, bool useCustomSize, SDL_Rect *customSizeRect) {
+signed int renderTextAtCoord(SDL_Renderer *renderer, const char *text, const int x, const int y, SDL_Color *textColor, bool useCustomSize, SDL_Rect *customSizeRect) {
     SDL_Texture *textTexture = generateTextTexture(renderer, text, textColor);
     SDL_Rect rectSize;
     

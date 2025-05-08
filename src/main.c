@@ -15,10 +15,10 @@
 
 #include "../include/utils.h"
 
-
 SDL_Color SDLRedColor = {255, 0, 0, 255};
 SDL_Color SDLGreenColor = {0, 255, 0, 255};
 SDL_Color SDLBlueColor = {0, 0, 255, 255};
+
 bool isUsingVsync = true; // ! Not really used. // TODO: Will be modified
 
 int main(const int argc, const char *argv[]) {
@@ -26,11 +26,10 @@ int main(const int argc, const char *argv[]) {
     // * INITIALIZING all the variables that are going to be used.
     // ! // FIXME: Maybe clean this area, some variables may be unused.
     int circlePrecision = 100; // ? // TODO: Move this variable
-    bool inTransition, isStillInTransition = false; // ! // TODO: Will be removed
-    transitionProperties *transitionPtr; // ! // TODO: Will be removed
     long frameStartTime, frameTime; // ? // TODO: Move these variables
     double fps; // ? // TODO: Remove or move these variables
-    int roundedFps = 0; // ! // TODO: Remove this variable
+    char currentFPS[3] = "";
+    // int roundedFps = 0; // ! // TODO: Remove this variable
     
     SDL_Rect FPSLocation = {650, 0, 150, 200}; // ? // TODO: Move or remove this variable
     SDL_Rect backgroundColorBox = { 200, 150, 400, 300 }; // ? // TODO: Move or remove this variable
@@ -42,6 +41,10 @@ int main(const int argc, const char *argv[]) {
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER);
     TTF_Init();
     utilsInit();
+
+    struct SDL_DisplayMode screenInfo;
+    SDL_GetCurrentDisplayMode(0, &screenInfo);
+    printf("%u, %u, %u\n", screenInfo.w, screenInfo.h, screenInfo.refresh_rate);
     
     SDL_Window *window = SDL_CreateWindow("First UI", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, 0); // SDL_WINDOW_FULLSCREEN
     SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
@@ -51,10 +54,14 @@ int main(const int argc, const char *argv[]) {
     
     // * SDL2 Initilialized, program running
 
-    addFontToList("Roboto-Regular", 10);
-    addFontToList("BebasNeue-Regular", 100);
-    addFontToList("CascadiaMono-Regular", 100);
-    addFontToList("DancingScript-Regular", 100);
+    signed int success = addFontToList("Roboto-Regular", 10);
+    printf("%u\n", success);
+    success = addFontToList("BebasNeue-Regular", 50);
+    printf("%u\n", success);
+    success = addFontToList("CascadiaMono-Regular", 100);
+    printf("%u\n", success);
+    success = addFontToList("DancingScript-Regular", 200);
+    printf("%u\n", success);
     // ! // TODO: Clean this mess, maybe create a function to remember each input and reactions.
     while (running) {
         SDL_Event event;
@@ -73,19 +80,20 @@ int main(const int argc, const char *argv[]) {
                         whatToMove = &FPSLocation;
                     }
                 } else if (event.key.keysym.sym == SDLK_m) {
-                    inTransition = !inTransition;
-                    if (inTransition) {
-                        printf("Currently in transition\n");
-                        transitionPtr = transitionBackgroundColorInit(&SDLRedColor, &SDLBlueColor, 240);
-                    } else { printf("Currently NOT in transition\n"); }
-                } else if(event.key.keysym.sym == SDLK_v) {
+                    printf("Funtion removed :'(\n");
+                    // inTransition = !inTransition;
+                    // if (inTransition) {
+                    //     printf("Currently in transition\n");
+                    //     transitionPtr = transitionBackgroundColorInit(&SDLRedColor, &SDLBlueColor, 240);
+                    // } else { printf("Currently NOT in transition\n"); }
+                } else if(event.key.keysym.sym == SDLK_v && false) {
                     SDL_DestroyRenderer(renderer);
                     isUsingVsync = !isUsingVsync;
                     if (isUsingVsync) {
-                        printf("Using Vsync");
+                        printf("Using Vsync\n");
                         renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
                     } else {
-                        printf("NOT using Vsync");
+                        printf("NOT using Vsync\n");
                         renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
                     }
                 } else if (event.key.keysym.sym == SDLK_o) {
@@ -115,23 +123,22 @@ int main(const int argc, const char *argv[]) {
         
         frameStartTime = SDL_GetTicks64();
 
-        char currentFPS[3];
-        sprintf(currentFPS, "%u", (int)roundedFps);
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Clear screen
         SDL_RenderClear(renderer);
         
-        if (state == STATE_LOGIN && !inTransition) {
+        if (state == STATE_LOGIN) {
             SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255); // Red for login
-        } else if (state == STATE_HOME && !inTransition) {
+        } else if (state == STATE_HOME) {
             SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255); // Green for home
-        } else if (inTransition) {
-            printf("-");
-            isStillInTransition = transitionBackgroundColorNextFrame(renderer, transitionPtr);
-            if (!isStillInTransition) {
-                inTransition = false;
-                free(transitionPtr);
-            }
-        }
+        } 
+        // else if (inTransition) {
+        //     printf("-");
+        //     isStillInTransition = transitionBackgroundColorNextFrame(renderer, transitionPtr);
+        //     if (!isStillInTransition) {
+        //         inTransition = false;
+        //         free(transitionPtr);
+        //     }
+        // }
         
         SDL_RenderFillRect(renderer, &backgroundColorBox);
 
@@ -155,21 +162,22 @@ int main(const int argc, const char *argv[]) {
         SDL_Rect tempRect = {100, 100, 200, 200};
         selectFontFromList("Roboto-Regular", 100);
         renderTextAtCoord(renderer, "Hello world!", 100, 100, &SDLGreenColor, true, &tempRect);
-        // selectFontFromList("BebasNeue-Regular", 100);
-        // renderTextAtCoord(renderer, "Hello world!", 100, 100, &SDLGreenColor, false, NULL);
-        // selectFontFromList("DancingScript-Regular", 100);
-        // renderTextAtCoord(renderer, "world!", 500, 100, &SDLBlueColor, false, NULL);
-        // selectFontFromList("CascadiaMono-Regular", 100);
+        selectFontFromList("BebasNeue-Regular", 50);
+        renderTextAtCoord(renderer, "Hello world!", 100, 100, &SDLGreenColor, false, NULL);
+        selectFontFromList("DancingScript-Regular", 200);
+        renderTextAtCoord(renderer, "world!", 500, 100, &SDLBlueColor, false, NULL);
+        selectFontFromList("CascadiaMono-Regular", 100);
         renderTextAtCoord(renderer, currentFPS, FPSLocation.x, FPSLocation.y, &SDLBlueColor, false, NULL);
 
         SDL_RenderPresent(renderer);
         frameTime = SDL_GetTicks() - frameStartTime;
         if (frameTime > 0) {
             fps = 1000.0f / frameTime;
-            roundedFps = (int)round(fps);
+            sprintf(currentFPS, "%u", (int)round(fps));
         }
     };
 
+    // ? Clear (mostly) everything of the system
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     TTF_Quit();
