@@ -13,7 +13,9 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 
+#include "../include/text.h"
 #include "../include/utils.h"
+#include "../include/shapes.h"
 
 SDL_Color SDLRedColor = {255, 0, 0, 255};
 SDL_Color SDLGreenColor = {0, 255, 0, 255};
@@ -39,8 +41,9 @@ int main(const int argc, const char *argv[]) {
     // * Variables definition finished. Initialization of SDL2
     
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER);
-    TTF_Init();
-    utilsInit();
+    // TTF_Init();
+    // utilsInit();
+    textInit();
 
     struct SDL_DisplayMode screenInfo;
     SDL_GetCurrentDisplayMode(0, &screenInfo);
@@ -150,18 +153,19 @@ int main(const int argc, const char *argv[]) {
         SDL_Vertex point3 = {{100, 100}, {0, 0, 255, 255}, {0, 0}};
         SDL_Vertex point4 = {{200, 150}, {255, 255, 255, 255}, {0, 0}};
         SDL_Vertex tempVertex[] = { point1, point2, point3, point1, point4, point2 };
-        
-        SDL_Color tempColor = {255, 255, 255, 255};
-        drawCircleAtCoord(renderer, 100, 100, 100, circlePrecision, tempColor);
-        drawCircleAtCoord(renderer, 300, 300, 50, circlePrecision, tempColor);
         SDL_RenderGeometry(renderer, NULL, tempVertex, 3, NULL, 0);
         
         SDL_FreeSurface(tempSurface);
         SDL_DestroyTexture(tempTexture);
+
+        SDL_Color tempColor = {255, 255, 255, 255};
+        drawCircleAtCoord(renderer, 100, 100, 100, circlePrecision, tempColor);
+        drawCircleAtCoord(renderer, 300, 300, 50, circlePrecision, tempColor);
+        
         
         SDL_Rect tempRect = {100, 100, 200, 200};
         selectFontFromList("Roboto-Regular", 100);
-        renderTextAtCoord(renderer, "Hello world!", 100, 100, &SDLGreenColor, true, &tempRect);
+        signed int success = renderTextAtCoord(renderer, "Hello world!", 100, 100, &SDLGreenColor, true, &tempRect);
         selectFontFromList("BebasNeue-Regular", 50);
         renderTextAtCoord(renderer, "Hello world!", 100, 100, &SDLGreenColor, false, NULL);
         selectFontFromList("DancingScript-Regular", 200);
