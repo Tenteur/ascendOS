@@ -1,5 +1,8 @@
 build/
 static/
+.vscode/
 doxygen-awesome-css
 *.o
 *.log
+.vscode/tasks.json
+build/myapp

@@ -16,6 +16,11 @@
 #include "../include/text.h"
 #include "../include/utils.h"
 #include "../include/shapes.h"
+#include "../include/images.h"
+
+#include <unistd.h>
+#include <stdio.h>
+#include <linux/limits.h>
 
 SDL_Color SDLRedColor = {255, 0, 0, 255};
 SDL_Color SDLGreenColor = {0, 255, 0, 255};
@@ -38,12 +43,21 @@ int main(const int argc, const char *argv[]) {
 
     SDL_Rect *whatToMove = &FPSLocation; // ? // TODO: Move or remove this variable
 
+    char cwd[500];
+    if (getcwd(cwd, sizeof(cwd)) != NULL) {
+        printf("Current working dir: %s\n", cwd);
+    } else {
+        perror("getcwd() error");
+        return 1;
+    }
+
     // * Variables definition finished. Initialization of SDL2
     
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER);
     // TTF_Init();
     // utilsInit();
     textInit();
+    imagesInit();
 
     struct SDL_DisplayMode screenInfo;
     SDL_GetCurrentDisplayMode(0, &screenInfo);
@@ -173,13 +187,19 @@ int main(const int argc, const char *argv[]) {
         selectFontFromList("CascadiaMono-Regular", 100);
         renderTextAtCoord(renderer, currentFPS, FPSLocation.x, FPSLocation.y, &SDLBlueColor, false, NULL);
 
+        char imagePath[550];
+        sprintf(imagePath, "%s/static/img/orange.jpg", cwd);
+        renderImage(renderer, imagePath, 100, 100);
+
         SDL_RenderPresent(renderer);
         frameTime = SDL_GetTicks() - frameStartTime;
         if (frameTime > 0) {
             fps = 1000.0f / frameTime;
             sprintf(currentFPS, "%u", (int)round(fps));
         }
-    };
+
+   
+    }
 
     // ? Clear (mostly) everything of the system
     SDL_DestroyRenderer(renderer);
