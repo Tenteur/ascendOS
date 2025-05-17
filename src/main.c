@@ -179,7 +179,7 @@ int main(const int argc, const char *argv[]) {
         
         SDL_Rect tempRect = {100, 100, 200, 200};
         selectFontFromList("Roboto-Regular", 100);
-        signed int success = renderTextAtCoord(renderer, "Hello world!", 100, 100, &SDLGreenColor, true, &tempRect);
+        renderTextAtCoord(renderer, "Hello world!", 100, 100, &SDLGreenColor, true, &tempRect);
         selectFontFromList("BebasNeue-Regular", 50);
         renderTextAtCoord(renderer, "Hello world!", 100, 100, &SDLGreenColor, false, NULL);
         selectFontFromList("DancingScript-Regular", 200);
@@ -190,6 +190,9 @@ int main(const int argc, const char *argv[]) {
         char imagePath[550];
         sprintf(imagePath, "%s/static/img/orange.jpg", cwd);
         renderImage(renderer, imagePath, 100, 100);
+        drawCircleAtCoord(renderer, 0, 0, 50, circlePrecision, SDLBlueColor);
+        drawSquareAtCoord(renderer, 50, 50, 50, SDLGreenColor);
+        drawRectAtCoord(renderer, 100, 100, 150, 30, SDLBlueColor);
 
         SDL_RenderPresent(renderer);
         frameTime = SDL_GetTicks() - frameStartTime;
