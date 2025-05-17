@@ -8,13 +8,16 @@
 #include "../include/shapes.h"
 
 
-signed int drawCircleAtCoord(SDL_Renderer *renderer, const int x, const int y, const float radius, const int precision, const SDL_Color color) {
+signed int drawCircleAtCoord(SDL_Renderer *renderer, int x, int y, const float radius, const int precision, const SDL_Color color) {
 	const float PI = 3.14;
     const float increment = 2.0f * PI / precision; // 2 PI Rad / precision (higher, lower increment so higher precision but slower)
     SDL_Vertex vertices[precision + 2]; // Number of vertices
+
+    x = x + radius;
+    y = y + radius;
     
     // Circle center
-    vertices[0].position.x = x; // 
+    vertices[0].position.x = x;
     vertices[0].position.y = y;
     vertices[0].color = color;
     vertices[0].tex_coord.x = 0;
@@ -69,8 +72,12 @@ signed int drawSquareAtCoord(SDL_Renderer *renderer, const int x, const int y, c
     vertexList[5].tex_coord.x = 0;
     vertexList[5].tex_coord.y = 0;
     
-    SDL_RenderGeometry(renderer, NULL, vertexList, 6, NULL, 0);
-    return 0;
+    const int result = SDL_RenderGeometry(renderer, NULL, vertexList, 6, NULL, 0);
+    if (result != 0) {
+        return -1;
+    } else {
+        return 0;
+    }
 }
 
 signed int drawRectAtCoord(SDL_Renderer *renderer, const int x, const int y, const int xsize, const int ysize, const SDL_Color color) {
@@ -103,6 +110,10 @@ signed int drawRectAtCoord(SDL_Renderer *renderer, const int x, const int y, con
     vertexList[5].tex_coord.x = 0;
     vertexList[5].tex_coord.y = 0;
     
-    SDL_RenderGeometry(renderer, NULL, vertexList, 6, NULL, 0);
-    return 0;
+    const int result = SDL_RenderGeometry(renderer, NULL, vertexList, 6, NULL, 0);
+    if (result != 0) {
+        return -1;
+    } else {
+        return 0;
+    }
 }

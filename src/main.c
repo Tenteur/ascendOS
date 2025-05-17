@@ -190,9 +190,9 @@ int main(const int argc, const char *argv[]) {
         char imagePath[550];
         sprintf(imagePath, "%s/static/img/orange.jpg", cwd);
         renderImage(renderer, imagePath, 100, 100);
-        drawCircleAtCoord(renderer, 0, 0, 50, circlePrecision, SDLBlueColor);
         drawSquareAtCoord(renderer, 50, 50, 50, SDLGreenColor);
         drawRectAtCoord(renderer, 100, 100, 150, 30, SDLBlueColor);
+        drawCircleAtCoord(renderer, 0, 0, 50, circlePrecision, SDLBlueColor);
 
         SDL_RenderPresent(renderer);
         frameTime = SDL_GetTicks() - frameStartTime;
