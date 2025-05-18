@@ -118,16 +118,22 @@ $(function(){initNavTree('shapes_8h.html',''); initResizable(true); });
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ae1ff2aedf4569df259505be0efc26469" id="r_ae1ff2aedf4569df259505be0efc26469"><td class="memItemLeft" align="right" valign="top">signed int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae1ff2aedf4569df259505be0efc26469">drawCircleAtCoord</a> (SDL_Renderer *renderer, const int x, const int y, const float radius, const int precision, const SDL_Color color)</td></tr>
-<tr class="memdesc:ae1ff2aedf4569df259505be0efc26469"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw circle on screen Draw a cicle at given coordinate and given radius.  <br /></td></tr>
-<tr class="separator:ae1ff2aedf4569df259505be0efc26469"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab93c0d55d54ba404b5c423f272be267a" id="r_ab93c0d55d54ba404b5c423f272be267a"><td class="memItemLeft" align="right" valign="top">signed int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab93c0d55d54ba404b5c423f272be267a">drawCircleAtCoord</a> (SDL_Renderer *renderer, int x, int y, const float radius, const int precision, const SDL_Color color)</td></tr>
+<tr class="memdesc:ab93c0d55d54ba404b5c423f272be267a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw circle on screen Draw a cicle at given coordinate and given radius. The origin of the circle is top left.  <br /></td></tr>
+<tr class="separator:ab93c0d55d54ba404b5c423f272be267a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a16699c071294ee9486aa27450871aff0" id="r_a16699c071294ee9486aa27450871aff0"><td class="memItemLeft" align="right" valign="top">signed int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a16699c071294ee9486aa27450871aff0">drawSquareAtCoord</a> (SDL_Renderer *renderer, const int x, const int y, const int size, const SDL_Color color)</td></tr>
+<tr class="memdesc:a16699c071294ee9486aa27450871aff0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a square on screen Draw a square with a given color, coordinates and size. The origin of the square is top left.  <br /></td></tr>
+<tr class="separator:a16699c071294ee9486aa27450871aff0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4586af345197744f807f5461a130826e" id="r_a4586af345197744f807f5461a130826e"><td class="memItemLeft" align="right" valign="top">signed int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4586af345197744f807f5461a130826e">drawRectAtCoord</a> (SDL_Renderer *renderer, const int x, const int y, const int xsize, const int ysize, const SDL_Color color)</td></tr>
+<tr class="memdesc:a4586af345197744f807f5461a130826e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a rectangle on screen Draw a rectangle with a given color, coordinates and size. The origin of the rectange is top left.  <br /></td></tr>
+<tr class="separator:a4586af345197744f807f5461a130826e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>shapes file contains everything needed to draw shapes and modify them </p>
 <dl class="section note"><dt>Note</dt><dd>Is not fully implemented, lots of things missing </dd></dl>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a id="ae1ff2aedf4569df259505be0efc26469" name="ae1ff2aedf4569df259505be0efc26469"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae1ff2aedf4569df259505be0efc26469">&#9670;&#160;</a></span>drawCircleAtCoord()</h2>
+<a id="ab93c0d55d54ba404b5c423f272be267a" name="ab93c0d55d54ba404b5c423f272be267a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab93c0d55d54ba404b5c423f272be267a">&#9670;&#160;</a></span>drawCircleAtCoord()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -140,12 +146,12 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const int</td>          <td class="paramname"><span class="paramname"><em>x</em></span>, </td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>x</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const int</td>          <td class="paramname"><span class="paramname"><em>y</em></span>, </td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>y</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -165,13 +171,115 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Draw circle on screen Draw a cicle at given coordinate and given radius. </p>
+<p>Draw circle on screen Draw a cicle at given coordinate and given radius. The origin of the circle is top left. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">x</td><td>x coordinate in pixels </td></tr>
     <tr><td class="paramname">y</td><td>y coordinate in pixels </td></tr>
     <tr><td class="paramname">radius</td><td>radius as a float (number of pixels i think) </td></tr>
     <tr><td class="paramname">precision</td><td>number of segments to draw as int </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 if success, -1 if failure </dd></dl>
+
+</div>
+</div>
+<a id="a4586af345197744f807f5461a130826e" name="a4586af345197744f807f5461a130826e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4586af345197744f807f5461a130826e">&#9670;&#160;</a></span>drawRectAtCoord()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">signed int drawRectAtCoord </td>
+          <td>(</td>
+          <td class="paramtype">SDL_Renderer *</td>          <td class="paramname"><span class="paramname"><em>renderer</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int</td>          <td class="paramname"><span class="paramname"><em>x</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int</td>          <td class="paramname"><span class="paramname"><em>y</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int</td>          <td class="paramname"><span class="paramname"><em>xsize</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int</td>          <td class="paramname"><span class="paramname"><em>ysize</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const SDL_Color</td>          <td class="paramname"><span class="paramname"><em>color</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Draw a rectangle on screen Draw a rectangle with a given color, coordinates and size. The origin of the rectange is top left. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">x</td><td>x coordinates in pixels </td></tr>
+    <tr><td class="paramname">y</td><td>y coordinates in pixels </td></tr>
+    <tr><td class="paramname">xsize</td><td>the size of one the horizontal side </td></tr>
+    <tr><td class="paramname">ysize</td><td>the size of one the vertical side </td></tr>
+    <tr><td class="paramname">color</td><td>the color of the square </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 if success, -1 if failure </dd></dl>
+
+</div>
+</div>
+<a id="a16699c071294ee9486aa27450871aff0" name="a16699c071294ee9486aa27450871aff0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a16699c071294ee9486aa27450871aff0">&#9670;&#160;</a></span>drawSquareAtCoord()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">signed int drawSquareAtCoord </td>
+          <td>(</td>
+          <td class="paramtype">SDL_Renderer *</td>          <td class="paramname"><span class="paramname"><em>renderer</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int</td>          <td class="paramname"><span class="paramname"><em>x</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int</td>          <td class="paramname"><span class="paramname"><em>y</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int</td>          <td class="paramname"><span class="paramname"><em>size</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const SDL_Color</td>          <td class="paramname"><span class="paramname"><em>color</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Draw a square on screen Draw a square with a given color, coordinates and size. The origin of the square is top left. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">x</td><td>x coordinates in pixels </td></tr>
+    <tr><td class="paramname">y</td><td>y coordinates in pixels </td></tr>
+    <tr><td class="paramname">size</td><td>the size of one side (which will be the size of the four side) </td></tr>
+    <tr><td class="paramname">color</td><td>the color of the square </td></tr>
   </table>
   </dd>
 </dl>
