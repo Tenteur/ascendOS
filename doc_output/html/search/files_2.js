@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['text_2ec_0',['text.c',['../text_8c.html',1,'']]],
-  ['text_2eh_1',['text.h',['../text_8h.html',1,'']]]
+  ['render_5fmanager_2ec_0',['render_manager.c',['../render__manager_8c.html',1,'']]],
+  ['render_5fmanager_2eh_1',['render_manager.h',['../render__manager_8h.html',1,'']]]
 ];

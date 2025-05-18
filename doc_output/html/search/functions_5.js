@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['selectfontfromlist_0',['selectFontFromList',['../text_8c.html#ac0e328ab4b3ca91393e7e47186fbfd2d',1,'selectFontFromList(char *fontName, int fontSize):&#160;text.c'],['../text_8h.html#ac0e328ab4b3ca91393e7e47186fbfd2d',1,'selectFontFromList(char *fontName, int fontSize):&#160;text.c']]]
+  ['main_0',['main',['../main_8c.html#ad53223b8779f25caeddb70a3b9172967',1,'main.c']]]
 ];

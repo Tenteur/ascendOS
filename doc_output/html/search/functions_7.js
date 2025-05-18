@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['utilsinit_0',['utilsInit',['../utils_8c.html#a9c27a5236a1bce18e0d9da2838c7ac0f',1,'utilsInit():&#160;utils.c'],['../utils_8h.html#a9c27a5236a1bce18e0d9da2838c7ac0f',1,'utilsInit():&#160;utils.c']]],
-  ['utilsquit_1',['utilsQuit',['../utils_8c.html#a05d4e5e482525db05e3da00631e917c8',1,'utilsQuit():&#160;utils.c'],['../utils_8h.html#a05d4e5e482525db05e3da00631e917c8',1,'utilsQuit():&#160;utils.c']]]
+  ['selectfontfromlist_0',['selectFontFromList',['../text_8c.html#ac0e328ab4b3ca91393e7e47186fbfd2d',1,'selectFontFromList(char *fontName, int fontSize):&#160;text.c'],['../text_8h.html#ac0e328ab4b3ca91393e7e47186fbfd2d',1,'selectFontFromList(char *fontName, int fontSize):&#160;text.c']]]
 ];

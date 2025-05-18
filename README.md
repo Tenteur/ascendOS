@@ -1,3 +1,4 @@
+
 # ascendOS
 
 ascendOS is a Linux application designed to provide a game console-like user interface, similar to those found on platforms like Xbox, PlayStation, or Nintendo Switch. The goal is for ascendOS to be the first thing launched on your system, offering a seamless and immersive experience.
@@ -25,6 +26,14 @@ This project is in its very early stages of development. There is still a signif
 
 - Linux operating system.
 - SDL2 and related libraries installed (SDL2_image, SDL2_ttf, SDL2_mixer).
+
+### The documentation
+
+Go the the path:
+```bash
+./doc_output/html/index.html
+ ```
+ Here is all the functions and files documented (as much as i could)
 
 ### Building the Project
 
