@@ -5,6 +5,7 @@
         "sdl.h": "c",
         "random": "c",
         "utils.C": "c",
-        "sdl_ttf.h": "c"
+        "sdl_ttf.h": "c",
+        "render_manager.h": "c"
     }
 }

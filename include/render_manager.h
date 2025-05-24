@@ -23,6 +23,8 @@ typedef struct itemDataNode {
     SDL_Surface *surfacePtr;
     int xCoord;
     int yCoord;
+    int width;
+    int height;
     struct itemDataNode *next;
 } itemDataNode;
 
@@ -33,32 +35,28 @@ typedef struct itemDataNode {
 signed int render_managerInit(SDL_Renderer *renderer);
 
 /**
- * @brief Get an available itemID
- * Search through the itemDataNode to find an available itemID for the sceneID.
- * @param sceneID the sceneID where to search for an available itemID.
- * @return int > 0 if success, 0 if failure.
- */
-static int render_managerGetAvailableItemID(int sceneID);
-
-/**
  * @brief Draws complete or partial scene
  * @param sceneID 1 for background, 2 for middle, 3 for foreground. Draws all upper scene (1 draws 1, 2 and 3). If 0, draws everything.
  * @note Will probably be modified since there is no real use case for drawing scenes independently.
  * @return 0 if success, -1 if failure.
  */
-signed int render_managerDrawScene(int sceneID);
+signed int render_managerDrawScene();
 
 /**
  * @brief Add a texture to draw to screen.
  * Add a texture to draw and return the id of this item relative to scene
+ * @note One of texturePtr and surfacePtr should be NULL, the one that is not NULL is the one that will be drawn.
  * @param sceneID The ID of the scene where the texture is drawn (0 background, 1 middle, 2 foreground).
  * @param layer The layer to draw the texture, lower layer gets drawn first (0->1->2) if two texute have the same layer but overlap, the first to be drawn is based on the ID the texute gets.
- * @param texturePtr The pointer to the texture to add.
+ * @param texturePtr The pointer to the texture to add, can be NULL (check note).
+ * @param surfacePtr The pointer to the surface to add, can be NULL (check note).
  * @param x The x coordinate where the texture gets drawn relative to screen (absolute so).
  * @param y The y coordinate where the texture gets drawn relative to screen (absolute so).
+ * @param width The width of the item.
+ * @param height The height of the item.
  * @return itemID > 0 if success, 0 if failure.
  */
-int render_managerAddTextureToDraw(int sceneID, signed int layer, SDL_Texture *texturePtr, const int x, const int y);
+int render_managerAddItemToDraw(int sceneID, signed int layer, SDL_Texture *texturePtr, SDL_Surface *surfacePtr, const int x, const int y, const int width, const int height);
 /**
  * @brief Add a surface to draw to screen.
  * Add a texture to draw and return the id of this item relative to scene
@@ -70,7 +68,7 @@ int render_managerAddTextureToDraw(int sceneID, signed int layer, SDL_Texture *t
  * @param y The y coordinate where the surface gets drawn relative to screen (absolute so).
  * @return itemID > 0 if success, 0 if failure.
  */
-int render_managerAddSurfaceToDraw(int sceneID, signed int layer, SDL_Surface *surfacePtr, const int x, const int y);
+// int render_managerAddSurfaceToDraw(int sceneID, signed int layer, SDL_Surface *surfacePtr, const int x, const int y);
 
 /**
  * @brief Get the itemID from the data structure.
