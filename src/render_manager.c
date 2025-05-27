@@ -31,15 +31,14 @@ static int render_managerGetAvailableItemID(int sceneID) {
 
 int render_managerAddItemToDraw(const signed int sceneID, const signed int layer, SDL_Texture *texturePtr, SDL_Surface *surfacePtr, const int x, const int y, const int width, const int height) {
     itemDataNode *currentNodeCheck = globalItemDataNode; // Head of the node.
-    bool conditionsNotMet = true;
     int itemID = render_managerGetAvailableItemID(sceneID);
-    while(conditionsNotMet) {
+    while(true) {
         if (currentNodeCheck->next == NULL) {
-            conditionsNotMet = false;
+            break;
         } else if (currentNodeCheck->sceneID == sceneID && currentNodeCheck->layer > layer) {
-            conditionsNotMet = false;
+            break;
         } else if (currentNodeCheck->sceneID == sceneID && currentNodeCheck->layer == layer && currentNodeCheck->itemID < itemID && currentNodeCheck->next->itemID > itemID) {
-            conditionsNotMet = false;
+            break;
         }
     } // Out of the loop: got the node where to add this
     itemDataNode *newItemDataNode = malloc(sizeof(itemDataNode));
@@ -58,18 +57,18 @@ int render_managerAddItemToDraw(const signed int sceneID, const signed int layer
 }
 
 signed int render_managerDrawScene() {
-    SDL_Rect *currentRect;
-    itemDataNode *currentItemDataNode = globalItemDataNode; // Head of the node.
+    SDL_Rect currentRect;
+    itemDataNode *currentItemDataNode = globalItemDataNode->next; // Head of the node, contains no data so should not be drawn.
     while (true) {
-        currentRect->x = currentItemDataNode->xCoord;
-        currentRect->y = currentItemDataNode->yCoord;
-        currentRect->w = currentItemDataNode->width;
-        currentRect->h = currentItemDataNode->height;
+        currentRect.x = currentItemDataNode->xCoord;
+        currentRect.y = currentItemDataNode->yCoord;
+        currentRect.w = currentItemDataNode->width;
+        currentRect.h = currentItemDataNode->height;
         if (currentItemDataNode->texturePtr == NULL) {
             SDL_Texture *texturePtr = SDL_CreateTextureFromSurface(globalRenderer, currentItemDataNode->surfacePtr);
-            SDL_RenderCopy(globalRenderer, texturePtr, NULL, currentRect);
+            SDL_RenderCopy(globalRenderer, texturePtr, NULL, &currentRect);
         } else {
-            SDL_RenderCopy(globalRenderer, currentItemDataNode->texturePtr, NULL, currentRect);
+            SDL_RenderCopy(globalRenderer, currentItemDataNode->texturePtr, NULL, &currentRect);
         }
         if (currentItemDataNode->next == NULL) {
             break;
@@ -77,7 +76,7 @@ signed int render_managerDrawScene() {
             currentItemDataNode = currentItemDataNode->next;
         }
     }
-    SDL_RenderPresent(globalRenderer);
+    // SDL_RenderPresent(globalRenderer);
     return 0;
 }
 
