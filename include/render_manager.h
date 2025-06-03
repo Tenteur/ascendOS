@@ -56,7 +56,7 @@ signed int render_managerDrawScene();
  * @param height The height of the item.
  * @return itemID > 0 if success, 0 if failure.
  */
-unsigned int render_managerAddItemToDraw(int sceneID, signed int layer, SDL_Texture *texturePtr, SDL_Surface *surfacePtr, const int x, const int y, const int width, const int height);
+unsigned int render_managerAddItemToDraw(const signed int sceneID, const signed int layer, SDL_Texture *texturePtr, SDL_Surface *surfacePtr, const int x, const int y, const int width, const int height);
 /**
  * @brief Add a surface to draw to screen.
  * Add a texture to draw and return the id of this item relative to scene
