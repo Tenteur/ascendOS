@@ -29,7 +29,7 @@ static int render_managerGetAvailableItemID(int sceneID) {
     return IDToReturn;
 }
 
-int render_managerAddItemToDraw(const signed int sceneID, const signed int layer, SDL_Texture *texturePtr, SDL_Surface *surfacePtr, const int x, const int y, const int width, const int height) {
+unsigned int render_managerAddItemToDraw(const signed int sceneID, const signed int layer, SDL_Texture *texturePtr, SDL_Surface *surfacePtr, const int x, const int y, const int width, const int height) {
     itemDataNode *currentNodeCheck = globalItemDataNode; // Head of the node.
     int itemID = render_managerGetAvailableItemID(sceneID);
     while(true) {
