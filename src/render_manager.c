@@ -8,7 +8,10 @@
 
 SDL_Renderer *globalRenderer = NULL;
 int *nextItemIDAvailable = NULL;
-struct itemDataNode *globalItemDataNode = NULL;
+struct itemDataNode *backgroundItemDataNode = NULL;
+struct itemDataNode *middlegroundItemDataNode = NULL;
+struct itemDataNode *foregroundItemDataNode = NULL;
+// @note These three are the heads of the nodes. They contain no data except for *next
 
 signed int render_managerInit(SDL_Renderer *renderer) {
     // @todo: Init other components, might even init the SDL_Renderer but will be done after
@@ -16,8 +19,12 @@ signed int render_managerInit(SDL_Renderer *renderer) {
     *nextItemIDAvailable = 1;
     globalRenderer = malloc(sizeof(renderer));
     globalRenderer = renderer;
-    globalItemDataNode = malloc(sizeof(itemDataNode));
-    globalItemDataNode->next = NULL; // The first textureDataNode will contain no data, used only as the head of the node.
+    backgroundItemDataNode = malloc(sizeof(itemDataNode));
+    backgroundItemDataNode->next = NULL; // The first textureDataNode will contain no data, used only as the head of the node.
+    middlegroundItemDataNode = malloc(sizeof(itemDataNode));
+    middlegroundItemDataNode->next = NULL; // The first textureDataNode will contain no data, used only as the head of the node.
+    foregroundItemDataNode = malloc(sizeof(itemDataNode));
+    foregroundItemDataNode->next = NULL; // The first textureDataNode will contain no data, used only as the head of the node.
     return 0;
 }
 
@@ -26,23 +33,26 @@ static int render_managerGetAvailableItemID(int layer) {
     if (IDToReturn == INT_MAX) {
         ; // @todo: search for the next available id
     }
+    // *nextItemIDAvailable = IDToReturn + 1;
     return IDToReturn;
 }
 
-unsigned int render_managerAddItemToDraw(const signed int layer, const signed int sublayer, SDL_Texture *texturePtr, SDL_Surface *surfacePtr, const int x, const int y, const int width, const int height) {
-    itemDataNode *currentNodeCheck = globalItemDataNode; // Head of the node.
+unsigned int render_managerAddItemToDraw(const unsigned int layer, const signed int sublayer, SDL_Texture *texturePtr, SDL_Surface *surfacePtr, const int x, const int y, const int width, const int height) {
+    itemDataNode *currentNodeCheck = NULL;
+    if (layer == 0) { currentNodeCheck = backgroundItemDataNode; }
+    else if (layer == 1) { currentNodeCheck = middlegroundItemDataNode; }
+    else if (layer == 2) { currentNodeCheck = foregroundItemDataNode; }
     int itemID = render_managerGetAvailableItemID(layer);
     while(true) {
         if (currentNodeCheck->next == NULL) {
             break;
-        } else if (currentNodeCheck->layer == layer && currentNodeCheck->layer > sublayer) {
+        } else if (currentNodeCheck->sublayer > sublayer) {
             break;
-        } else if (currentNodeCheck->layer == layer && currentNodeCheck->layer == sublayer && currentNodeCheck->itemID < itemID && currentNodeCheck->next->itemID > itemID) {
+        } else if (currentNodeCheck->sublayer == sublayer && currentNodeCheck->itemID < itemID && currentNodeCheck->next->itemID > itemID) {
             break;
         }
     } // Out of the loop: got the node where to add this
     itemDataNode *newItemDataNode = malloc(sizeof(itemDataNode));
-    newItemDataNode->layer = layer;
     newItemDataNode->sublayer = sublayer;
     newItemDataNode->itemID = itemID;
     newItemDataNode->texturePtr = texturePtr;
@@ -58,7 +68,25 @@ unsigned int render_managerAddItemToDraw(const signed int layer, const signed in
 
 signed int render_managerDrawScene() {
     SDL_Rect currentRect;
-    itemDataNode *currentItemDataNode = globalItemDataNode->next; // Head of the node, contains no data so should not be drawn.
+    itemDataNode *currentItemDataNode = NULL;
+    unsigned int currentLayerDrawn;
+    if (backgroundItemDataNode->next == NULL) {
+        if (middlegroundItemDataNode->next == NULL) {
+            if (foregroundItemDataNode->next == NULL) {
+                return 0;
+            } else {
+                currentItemDataNode = foregroundItemDataNode->next;
+                currentLayerDrawn = 2;
+            }
+        } else {
+            currentItemDataNode = middlegroundItemDataNode->next;
+            currentLayerDrawn = 1;
+        }
+    } else {
+        currentItemDataNode = backgroundItemDataNode->next;
+        currentLayerDrawn = 0;
+    }
+
     while (true) {
         currentRect.x = currentItemDataNode->xCoord;
         currentRect.y = currentItemDataNode->yCoord;
@@ -71,7 +99,10 @@ signed int render_managerDrawScene() {
             SDL_RenderCopy(globalRenderer, currentItemDataNode->texturePtr, NULL, &currentRect);
         }
         if (currentItemDataNode->next == NULL) {
-            break;
+            currentLayerDrawn += 1;
+            if (currentLayerDrawn == 1) currentItemDataNode = middlegroundItemDataNode->next;
+            else if (currentLayerDrawn == 2) currentItemDataNode = foregroundItemDataNode->next;
+            else break;
         } else {
             currentItemDataNode = currentItemDataNode->next;
         }
@@ -82,15 +113,19 @@ signed int render_managerDrawScene() {
 
 signed int render_managerRemoveItem(int layer, int itemID, bool afterRender) {
     // @todo: add the afterRender parameter.
-    itemDataNode *currentItemDataNode = globalItemDataNode;
+    itemDataNode *currentItemDataNode = NULL;
+    if (layer == 0) { currentItemDataNode = backgroundItemDataNode; }
+    else if (layer == 1) { currentItemDataNode = middlegroundItemDataNode; }
+    else if (layer == 2) { currentItemDataNode = foregroundItemDataNode; };
+
     itemDataNode *lastItemDataNode = NULL;
     while(true) {
-        if (currentItemDataNode->layer == layer && currentItemDataNode->itemID == itemID) {
+        if (currentItemDataNode->itemID == itemID) {
             if (currentItemDataNode->texturePtr != NULL) SDL_DestroyTexture(currentItemDataNode->texturePtr);
             else SDL_FreeSurface(currentItemDataNode->surfacePtr);
             // Cleaned the texture/surface from memory. Need to move the header
-            // if (currentItemDataNode == globalItemDataNode) { // @todo: Remove this condition because the item to remove cannot be the head of the NODE
-            //     globalItemDataNode = currentItemDataNode->next;
+            // if (currentItemDataNode == backgroundItemDataNode) { // @todo: Remove this condition because the item to remove cannot be the head of the NODE
+            //     backgroundItemDataNode = currentItemDataNode->next;
             //     free(currentItemDataNode);
             // }
             lastItemDataNode->next = currentItemDataNode->next;
