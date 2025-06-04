@@ -21,7 +21,7 @@ signed int render_managerInit(SDL_Renderer *renderer) {
     return 0;
 }
 
-static int render_managerGetAvailableItemID(int sceneID) {
+static int render_managerGetAvailableItemID(int layer) {
     int IDToReturn = *nextItemIDAvailable;
     if (IDToReturn == INT_MAX) {
         ; // @todo: search for the next available id
@@ -29,21 +29,21 @@ static int render_managerGetAvailableItemID(int sceneID) {
     return IDToReturn;
 }
 
-unsigned int render_managerAddItemToDraw(const signed int sceneID, const signed int layer, SDL_Texture *texturePtr, SDL_Surface *surfacePtr, const int x, const int y, const int width, const int height) {
+unsigned int render_managerAddItemToDraw(const signed int layer, const signed int sublayer, SDL_Texture *texturePtr, SDL_Surface *surfacePtr, const int x, const int y, const int width, const int height) {
     itemDataNode *currentNodeCheck = globalItemDataNode; // Head of the node.
-    int itemID = render_managerGetAvailableItemID(sceneID);
+    int itemID = render_managerGetAvailableItemID(layer);
     while(true) {
         if (currentNodeCheck->next == NULL) {
             break;
-        } else if (currentNodeCheck->sceneID == sceneID && currentNodeCheck->layer > layer) {
+        } else if (currentNodeCheck->layer == layer && currentNodeCheck->layer > sublayer) {
             break;
-        } else if (currentNodeCheck->sceneID == sceneID && currentNodeCheck->layer == layer && currentNodeCheck->itemID < itemID && currentNodeCheck->next->itemID > itemID) {
+        } else if (currentNodeCheck->layer == layer && currentNodeCheck->layer == sublayer && currentNodeCheck->itemID < itemID && currentNodeCheck->next->itemID > itemID) {
             break;
         }
     } // Out of the loop: got the node where to add this
     itemDataNode *newItemDataNode = malloc(sizeof(itemDataNode));
-    newItemDataNode->sceneID = sceneID;
     newItemDataNode->layer = layer;
+    newItemDataNode->sublayer = sublayer;
     newItemDataNode->itemID = itemID;
     newItemDataNode->texturePtr = texturePtr;
     newItemDataNode->surfacePtr = surfacePtr;
@@ -80,12 +80,12 @@ signed int render_managerDrawScene() {
     return 0;
 }
 
-signed int render_managerRemoveItem(int sceneID, int itemID, bool afterRender) {
+signed int render_managerRemoveItem(int layer, int itemID, bool afterRender) {
     // @todo: add the afterRender parameter.
     itemDataNode *currentItemDataNode = globalItemDataNode;
     itemDataNode *lastItemDataNode = NULL;
     while(true) {
-        if (currentItemDataNode->sceneID == sceneID && currentItemDataNode->itemID == itemID) {
+        if (currentItemDataNode->layer == layer && currentItemDataNode->itemID == itemID) {
             if (currentItemDataNode->texturePtr != NULL) SDL_DestroyTexture(currentItemDataNode->texturePtr);
             else SDL_FreeSurface(currentItemDataNode->surfacePtr);
             // Cleaned the texture/surface from memory. Need to move the header
