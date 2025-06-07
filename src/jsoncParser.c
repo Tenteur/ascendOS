@@ -16,7 +16,7 @@ int main() {
         printf("Failed to read filename.\n");
         return 1;
     }
-    printf("Enter the new filename as .json: ");
+    printf("Enter the new filename as .jsonUI: ");
     if (scanf("%255s", newFilename) != 1) {
         printf("Failed to create file.\n");
         return 1;
