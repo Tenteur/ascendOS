@@ -6,3 +6,6 @@ doxygen-awesome-css
 *.log
 .vscode/tasks.json
 build/myapp
+.vscode/settings.json
+src/jsoncParser
+templates/example.json
