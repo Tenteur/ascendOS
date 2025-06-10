@@ -8,7 +8,7 @@
 #include "../include/shapes.h"
 
 
-signed int drawCircleAtCoord(SDL_Renderer *renderer, int x, int y, const float radius, const int precision, const SDL_Color color) {
+signed int drawCircleAtCoord(SDL_Renderer *renderer, int x, int y, const float radius, const int precision, const SDL_Color color) { //@todo take a pointer for color
 	const float PI = 3.14;
     const float increment = 2.0f * PI / precision; // 2 PI Rad / precision (higher, lower increment so higher precision but slower)
     SDL_Vertex vertices[precision + 2]; // Number of vertices
