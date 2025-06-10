@@ -15,14 +15,14 @@ signed int imagesInit();
  * @brief Used to load an image as a texture
  * @param renderer The SDL renderer
  * @param imagePath The absolute path to an image (jpg or png)
- * @return 0 if success -1 if failure
+ * @return NULL if failure, else success.
  */
 SDL_Texture *loadImageAsTexture(SDL_Renderer *renderer, const char *imagePath);
 /**
  * @brief Used to load an image as a surface
  * @param renderer The SDL renderer
  * @param imagePath The absolute path to an image (jpg or png)
- * @return 0 if success -1 if failure
+ * @return NULL if failure, else success.
  */
 SDL_Surface *loadImageAsSurface(const char *imagePath);
 /**
