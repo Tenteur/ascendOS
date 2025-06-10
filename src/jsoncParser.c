@@ -53,9 +53,11 @@ int main() {
             ignoreNextChar = 0;
         }
     }
+    // putc(0x00, newFile);
     // Closing the file
 
     fclose(file);
+    fclose(newFile);
     printf("File closed successfully.\n");
     return 0;
 }
