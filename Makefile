@@ -12,7 +12,7 @@ LIBS = $(SDL_LIBS) -lSDL2_image -lSDL2_ttf -lSDL2_mixer -lm
 CFLAGS = -Wall -Wextra -Iinclude $(SDL_CFLAGS)
 
 # Files
-SRC = $(wildcard src/*.c)
+SRC = $(filter-out src/jsoncParser.c, $(wildcard src/*.c))
 OBJ = $(SRC:.c=.o)
 
 # Output binary

@@ -17,6 +17,8 @@
 #include "../include/utils.h"
 #include "../include/shapes.h"
 #include "../include/images.h"
+#include "../include/render_manager.h"
+#include "../include/interface_handler.h"
 
 #include <unistd.h>
 #include <stdio.h>
@@ -51,20 +53,29 @@ int main(const int argc, const char *argv[]) {
         return 1;
     }
 
+    // interface_handlerInit();
+    printf("Before\n");
+    // interface_handlerLoadScene("example.jsonUI");
+    printf("After\n");
+
     // * Variables definition finished. Initialization of SDL2
     
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER);
     // TTF_Init();
     // utilsInit();
-    textInit();
-    imagesInit();
-
+    
     struct SDL_DisplayMode screenInfo;
     SDL_GetCurrentDisplayMode(0, &screenInfo);
     printf("%u, %u, %u\n", screenInfo.w, screenInfo.h, screenInfo.refresh_rate);
     
     SDL_Window *window = SDL_CreateWindow("First UI", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, 0); // SDL_WINDOW_FULLSCREEN
     SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    
+    textInit();
+    imagesInit();
+    render_managerInit(renderer);
+
+    printf("%s\n", SDL_GetPixelFormatName(SDL_GetWindowPixelFormat(window)));
     
     bool running = true;
     AppState state = STATE_LOGIN;
@@ -188,20 +199,38 @@ int main(const int argc, const char *argv[]) {
         renderTextAtCoord(renderer, currentFPS, FPSLocation.x, FPSLocation.y, &SDLBlueColor, false, NULL);
 
         char imagePath[550];
-        sprintf(imagePath, "%s/static/img/orange.jpg", cwd);
-        renderImage(renderer, imagePath, 100, 100);
+        // sprintf(imagePath, "%s/static/img/orange.jpg", cwd);
+        // printf("%s\n", imagePath);
+        // renderImage(renderer, imagePath, 100, 100);
         drawSquareAtCoord(renderer, 50, 50, 50, SDLGreenColor);
         drawRectAtCoord(renderer, 100, 100, 150, 30, SDLBlueColor);
-        drawCircleAtCoord(renderer, 0, 0, 50, circlePrecision, SDLBlueColor);
 
-        SDL_RenderPresent(renderer);
-        frameTime = SDL_GetTicks() - frameStartTime;
-        if (frameTime > 0) {
-            fps = 1000.0f / frameTime;
-            sprintf(currentFPS, "%u", (int)round(fps));
-        }
-
-   
+        SDL_Texture *sdldldl = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_TARGET, 200, 200);
+        // SDL_SetRenderTarget(renderer, sdldldl);
+        SDL_Color color = {122, 152, 155, 0};
+        drawCircleAtCoord(renderer, 0, 0, 50, circlePrecision, color);
+        // SDL_SetRenderTarget(renderer, NULL);
+        
+    //     unsigned int hi = render_managerAddItemToDraw(2, 1, sdldldl, NULL, 0, 0, 200, 200);
+        
+    //     SDL_Texture *sdldldl2 = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_TARGET, 200, 200);
+    //     SDL_SetRenderTarget(renderer, sdldldl2);
+    //     SDL_Color color2 = {2, 102, 255, 0};
+    //     drawCircleAtCoord(renderer, 0, 0, 50, circlePrecision, color2);
+    //     SDL_SetRenderTarget(renderer, NULL);
+        
+    //     unsigned int hi2 = render_managerAddItemToDraw(2, 1, sdldldl2, NULL, 300, 300, 200, 200);
+        
+    //     render_managerDrawScene();
+    //     render_managerRemoveItem(2, hi, false);
+    //     render_managerRemoveItem(2, hi2, false);
+        
+    //     SDL_RenderPresent(renderer);
+    //     frameTime = SDL_GetTicks() - frameStartTime;
+    //     if (frameTime > 0) {
+    //         fps = 1000.0f / frameTime;
+    //         sprintf(currentFPS, "%u", (int)round(fps));
+    //     }
     }
 
     // ? Clear (mostly) everything of the system
