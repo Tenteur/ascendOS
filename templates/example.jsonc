@@ -1,0 +1,63 @@
+{
+    "type": "group", // type of the current item (since this is the parent, it is likely to be a group). A group has no render effect (but its children yes).
+    "name" : "uniqueName", // The name that can be used to reference to this element, can also have no name.
+    "textureGroupID": 0, // Since this is a group (parent), the textureGroupID will be ignored so should be 0 to avoid any problem (0 will be ignored).
+    "layer": 0, // Is this on the background, middleground or foreground (0, 1 or 2).
+                // Isn't needed for the children since it is inherited from the parent.
+    "subLayer": 0, // Tell the order that it should be drawn, can be duplicate but if overlap, render of element will be random. They are drawn from 0 to the last subLayer (increasing).
+                   // Whereas subLayer need to be specified for each children (they don't inherit this property).
+    "coord": [0, 0], // The coord of the top-left point. First x coord then y coord.
+    "size": { // The size of the item (is a rectangle, will define the limits, for example, this is a rectangle of 100x100 starting at 0x0).
+        "width": 100,
+        "height": 100
+    },
+    "items": [ // Coords of children are relative to parents (of coords or size exceeds the parent's limit, will not overflow).
+        {
+            "type": "text",
+            "textureGroupID": 2, // Can be any number, any items with the same textureGroupID will be considered the same texture and will be drawn and saved to memory as a single texure (to save memory and computing)
+                                 // But this means that if one update, every elements from this group will be updated as well (recalculated).
+                                 // So if they are elements that update a lot, should have their own solo groupID (or a group ID of 0).
+            "subLayer": 2,
+            "textContent": "Hello World!", // Specific for the "text" type.
+            "fontSize": 10, // Specific for the "text" type.
+            "fontName": "Roboto-Regular", // Specific for the "text" type.
+            "coord": [10, 10],
+            "size": { // 'size' can have 'auto' as true so no height and width is to be specified. The size will be determined at runtime (less hassle for us).
+                "auto": true
+            }
+        },
+        {
+            "type": "text",
+            "textureGroupID": 2,
+            "textContent": "From another line :)",
+            "fontSize": 10,
+            "fontName": "Roboto-Regular",
+            "coord": [30, 30],
+            "size": { // some types can have 'size': 'auto' as true so no height and width is to be specified, the size will be determined at runtime (less hassle and risk for us).
+                "auto": true
+            }
+        },
+        {
+            "type": "color",
+            "textureGroupID": 0, // Items with 'textureGroupID' as 0 will be drawn as a single item (so will be stored with its own texture in memory)
+            "subLayer": 100, // subLayer can be any positive number aside from 0 (for some coding reasons, just to be sure).
+            "colorRGB": [255, 255, 255], // The values are first Red then Green then Blue
+            "coord": [50, 50],
+            "size": { // some types can have 'size': 'auto' as true so no height and width is to be specified, the size will be determined at runtime (less hassle and risk for us).
+                "width": 10,
+                "height": 25
+            }
+        },
+        {
+            "type": "color",
+            "textureGroupID": 0, // Items with 'textureGroupID' as 0 will be drawn as a single item (so will be stored with its own texture in memory)
+            "subLayer": 99, // subLayer can be any positive number aside from 0 (for some coding reasons, just to be sure).
+            "colorRGBA": [125, 125, 125, 255], // Can also be RGBA with Alpha at the end.
+            "coord": [10, 25],
+            "size": { // some types can have 'size': 'auto' as true so no height and width is to be specified, the size will be determined at runtime (less hassle and risk for us).
+                "width": 50,
+                "height": 12
+            }
+        }
+    ]
+}
