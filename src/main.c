@@ -187,9 +187,22 @@ int main(const int argc, const char *argv[]) {
         selectFontFromList("CascadiaMono-Regular", 100);
         renderTextAtCoord(renderer, currentFPS, FPSLocation.x, FPSLocation.y, &SDLBlueColor, false, NULL);
 
+
+
+        char ccd[500];
+        if (getcwd(ccd, sizeof(ccd)) != NULL) {
+            printf("Current working dir: %s\n", ccd);
+        } else {
+            perror("getcwd() error");
+            return 1;
+        }
         char imagePath[550];
-        sprintf(imagePath, "%s/static/img/orange.jpg", cwd);
+        sprintf(imagePath, "%s/static/img/orange.jpg", ccd);
+        printf("%s should be concatenated; %s\n", ccd, imagePath);
         renderImage(renderer, imagePath, 100, 100);
+
+
+
         drawSquareAtCoord(renderer, 50, 50, 50, SDLGreenColor);
         drawRectAtCoord(renderer, 100, 100, 150, 30, SDLBlueColor);
         drawCircleAtCoord(renderer, 0, 0, 50, circlePrecision, SDLBlueColor);
