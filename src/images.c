@@ -9,7 +9,6 @@
 
 signed int imagesInit() {
     unsigned int result = IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG);
-    printf("%u\n", result);
     if(result == (IMG_INIT_JPG | IMG_INIT_PNG)) {
         printf("images Initialized !\n");
     } else {
