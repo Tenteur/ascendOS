@@ -85,18 +85,17 @@ int render_managerGetItemID(SDL_Texture *texturePtr, SDL_Surface *surfacePtr);
  * Delete the item (free for surfaces and destroy for textures) from memory and data structure. Won't be rendered.
  * @param layer the ID of the scene where the item is located.
  * @param itemID the ID of the item to delete.
- * @param afterRender is the item deleted after the render (true) or before (false).
  * @return 0 if success, -1 if failure.
  */
-signed int render_managerRemoveItem(int layer, int itemID, bool afterRender);
+signed int render_managerRemoveItem(int layer, int itemID);
 
-/**
- * @brief Update an item's position
- * Change the item's X and Y coordinate
- * @param itemID the ID of the item
- * @param layer the ID of the scene where the item is located
- * @param x the new X coord
- * @param y the new Y coord
- * @return 0 if success, -1 if failure.
- */
-signed int render_managerUpdateItemCoordinate(int itemID, int layer, int x, int y);
+// /**
+//  * @brief Update an item's position
+//  * Change the item's X and Y coordinate
+//  * @param itemID the ID of the item
+//  * @param layer the ID of the scene where the item is located
+//  * @param x the new X coord
+//  * @param y the new Y coord
+//  * @return 0 if success, -1 if failure.
+//  */
+// signed int render_managerUpdateItemCoordinate(int itemID, int layer, int x, int y);

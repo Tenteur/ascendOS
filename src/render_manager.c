@@ -111,8 +111,7 @@ signed int render_managerDrawScene() {
     return 0;
 }
 
-signed int render_managerRemoveItem(int layer, int itemID, bool afterRender) {
-    // @todo: add the afterRender parameter.
+signed int render_managerRemoveItem(int layer, int itemID) {
     itemDataNode *currentItemDataNode = NULL;
     if (layer == 0) { currentItemDataNode = backgroundItemDataNode; }
     else if (layer == 1) { currentItemDataNode = middlegroundItemDataNode; }
