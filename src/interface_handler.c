@@ -17,7 +17,7 @@ char currentWorkingDirectory[250];
 
 int interface_handlerInit() {
     if (getcwd(currentWorkingDirectory, sizeof(currentWorkingDirectory)) == NULL) {
-        perror("getcwd() error");
+        perror("getcwd error");
         return 1;
     }
 }
