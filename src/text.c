@@ -20,10 +20,11 @@ signed int textInit() {
     allFontsListStart->fontPtr = TTF_OpenFont("/usr/share/fonts/TTF/Roboto-Regular.ttf", 100);
     allFontsListStart->next = NULL;
     currentFontInUse = allFontsListStart->fontPtr;
+    printf("text Initialized\n");
     return 0;
 }
 
-signed int addFontToList(char *fontName, int fontSize) {
+signed int addFontToList(char *fontName, int fontSize) { // @todo: modify so it adds the font to the very beginning (gain some perf)
     if (strcmp(fontName, "default") == 0) {
         currentFontInUse = allFontsListStart->fontPtr;
         return 0;
@@ -70,6 +71,7 @@ SDL_Texture *generateTextTexture(SDL_Renderer *renderer, const char *text, const
     SDL_FreeSurface(textSurface);
     return textTexture;
 }
+
 // ? This function seems to work overall.
 // ! TODO: Clean this function
 signed int renderTextAtCoord(SDL_Renderer *renderer, const char *text, const int x, const int y, SDL_Color *textColor, bool useCustomSize, SDL_Rect *customSizeRect) {

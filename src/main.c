@@ -17,6 +17,8 @@
 #include "../include/utils.h"
 #include "../include/shapes.h"
 #include "../include/images.h"
+#include "../include/render_manager.h"
+#include "../include/interface_handler.h"
 
 #include <unistd.h>
 #include <stdio.h>
@@ -26,17 +28,14 @@ SDL_Color SDLRedColor = {255, 0, 0, 255};
 SDL_Color SDLGreenColor = {0, 255, 0, 255};
 SDL_Color SDLBlueColor = {0, 0, 255, 255};
 
-bool isUsingVsync = true; // ! Not really used. // TODO: Will be modified
-
 int main(const int argc, const char *argv[]) {
 
     // * INITIALIZING all the variables that are going to be used.
     // ! // FIXME: Maybe clean this area, some variables may be unused.
-    int circlePrecision = 100; // ? // TODO: Move this variable
+
     long frameStartTime, frameTime; // ? // TODO: Move these variables
     double fps; // ? // TODO: Remove or move these variables
     char currentFPS[3] = "";
-    // int roundedFps = 0; // ! // TODO: Remove this variable
     
     SDL_Rect FPSLocation = {650, 0, 150, 200}; // ? // TODO: Move or remove this variable
     SDL_Rect backgroundColorBox = { 200, 150, 400, 300 }; // ? // TODO: Move or remove this variable
@@ -54,17 +53,18 @@ int main(const int argc, const char *argv[]) {
     // * Variables definition finished. Initialization of SDL2
     
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER);
-    // TTF_Init();
-    // utilsInit();
-    textInit();
-    imagesInit();
-
+    
     struct SDL_DisplayMode screenInfo;
     SDL_GetCurrentDisplayMode(0, &screenInfo);
     printf("%u, %u, %u\n", screenInfo.w, screenInfo.h, screenInfo.refresh_rate);
     
     SDL_Window *window = SDL_CreateWindow("First UI", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, 0); // SDL_WINDOW_FULLSCREEN
     SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    
+    textInit();
+    imagesInit();
+    render_managerInit(renderer);
+    interface_handlerInit();
     
     bool running = true;
     AppState state = STATE_LOGIN;
@@ -93,26 +93,13 @@ int main(const int argc, const char *argv[]) {
                         whatToMove = &FPSLocation;
                     }
                 } else if (event.key.keysym.sym == SDLK_m) {
-                    printf("Funtion removed :'(\n");
-                    // inTransition = !inTransition;
-                    // if (inTransition) {
-                    //     printf("Currently in transition\n");
-                    //     transitionPtr = transitionBackgroundColorInit(&SDLRedColor, &SDLBlueColor, 240);
-                    // } else { printf("Currently NOT in transition\n"); }
-                } else if(event.key.keysym.sym == SDLK_v && false) {
-                    SDL_DestroyRenderer(renderer);
-                    isUsingVsync = !isUsingVsync;
-                    if (isUsingVsync) {
-                        printf("Using Vsync\n");
-                        renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-                    } else {
-                        printf("NOT using Vsync\n");
-                        renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-                    }
+                    printf("Transition function has been removed since it is deprecated and do not work\n");
+                } else if(event.key.keysym.sym == SDLK_v) {
+                    printf("Removed ability to disable VSync\n");
                 } else if (event.key.keysym.sym == SDLK_o) {
-                    circlePrecision += 1;
+                    printf("Modifying circle precision has been removed\n");
                 } else if (event.key.keysym.sym == SDLK_l) {
-                    circlePrecision -= 1;
+                    printf("Modifying circle precision has been removed\n");
                 }
                 else if (event.key.keysym.sym == SDLK_LEFT) {
                     whatToMove->x -= 1;
@@ -169,8 +156,8 @@ int main(const int argc, const char *argv[]) {
         SDL_DestroyTexture(tempTexture);
 
         SDL_Color tempColor = {255, 255, 255, 255};
-        drawCircleAtCoord(renderer, 100, 100, 100, circlePrecision, tempColor);
-        drawCircleAtCoord(renderer, 300, 300, 50, circlePrecision, tempColor);
+        drawCircleAtCoord(renderer, 100, 100, 100, 100, tempColor);
+        drawCircleAtCoord(renderer, 300, 300, 50, 100, tempColor);
         
         
         SDL_Rect tempRect = {100, 100, 200, 200};
@@ -186,23 +173,18 @@ int main(const int argc, const char *argv[]) {
 
 
         char ccd[500];
-        if (getcwd(ccd, sizeof(ccd)) != NULL) {
-            printf("Current working dir: %s\n", ccd);
-        } else {
+        if (getcwd(ccd, sizeof(ccd)) == NULL) {
             perror("getcwd() error");
-            return 1;
+        } else {
+            char imagePath[550];
+            sprintf(imagePath, "%s/static/img/orange.jpg", ccd);
+            renderImage(renderer, imagePath, 100, 100);
         }
-        char imagePath[550];
-        sprintf(imagePath, "%s/static/img/orange.jpg", ccd);
-        printf("%s should be concatenated; %s\n", ccd, imagePath);
-        renderImage(renderer, imagePath, 100, 100);
-
-
 
         drawSquareAtCoord(renderer, 50, 50, 50, SDLGreenColor);
         drawRectAtCoord(renderer, 100, 100, 150, 30, SDLBlueColor);
-        drawCircleAtCoord(renderer, 0, 0, 50, circlePrecision, SDLBlueColor);
-
+        drawCircleAtCoord(renderer, 0, 0, 50, 100, SDLBlueColor);
+ 
         SDL_RenderPresent(renderer);
         frameTime = SDL_GetTicks() - frameStartTime;
         if (frameTime > 0) {

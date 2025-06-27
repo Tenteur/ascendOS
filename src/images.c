@@ -8,7 +8,14 @@
 #include "../include/images.h"
 
 signed int imagesInit() {
-    printf("%u\n", IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG));
+    unsigned int result = IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG);
+    printf("%u\n", result);
+    if(result == IMG_INIT_JPG | IMG_INIT_PNG) {
+        printf("images Initialized !\n");
+    } else {
+        printf("images NOT Initialized !\n");
+        return -1;
+    }
     return 0;
 }
 
