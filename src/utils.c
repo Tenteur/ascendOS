@@ -19,7 +19,7 @@
 
 
 int utilsInit() {
-
+    return 0;
 }
 int utilsQuit() {
     // Ignore removing every fonts, losing time (instead of writing other code)
