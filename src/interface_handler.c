@@ -3,6 +3,7 @@
  * @brief This file manages all the interface and how they are being rendered.
  */
 
+#include <SDL2/SDL.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <fcntl.h>
@@ -20,6 +21,7 @@ int interface_handlerInit() {
         perror("getcwd() error");
         return 1;
     }
+    return 0;
 }
 
 int interface_handlerLoadScene(char sceneName[15]) {
@@ -50,4 +52,18 @@ int interface_handlerLoadScene(char sceneName[15]) {
     cJSON_Delete(json);
 
     return 0;
+}
+
+signed int render_managerFuseTextures(SDL_Renderer *renderer, SDL_Texture *outputTexture, SDL_Texture *firstInputTexture, SDL_Texture *secondInputTexture, SDL_Rect *firstInputCoord, SDL_Rect *secondInputCoord, SDL_Rect *firstInputSRect, SDL_Rect *secondInputSRect) {
+    signed int hasError = 0b0;
+    hasError = hasError ^ SDL_SetRenderTarget(renderer, outputTexture);
+    if (hasError != 0) return -1;
+    hasError = hasError ^ SDL_RenderCopy(renderer, firstInputTexture, firstInputSRect, firstInputCoord);
+    hasError = hasError ^ SDL_RenderCopy(renderer, secondInputTexture, secondInputSRect, secondInputCoord);
+    if (hasError != 0) {
+        printf("had an error during texture fusion\n");
+        return -1;
+    }
+    hasError = hasError ^ SDL_SetRenderTarget(renderer, NULL);
+    return hasError;
 }
