@@ -35,16 +35,12 @@ int interface_handlerLoadScene(char sceneName[15]) {
     fseek(sceneFile, 0L, SEEK_SET);
     fclose(sceneFile);
 
-    printf("%s has a size of %lu\n", sceneFilePath, sceneFileSize);
-
     char *sceneContent = malloc((sizeof(char) * sceneFileSize) + 1);
 
     int sceneFileFile = open(sceneFilePath, O_RDONLY);
 
     if (read(sceneFileFile, sceneContent, sceneFileSize) == -1) {
         printf("Error\n");
-    } else {
-        printf("Think this is good\n");
     }
 
     cJSON *json = cJSON_Parse(sceneContent);
