@@ -21,6 +21,7 @@ int interface_handlerInit() {
         perror("getcwd() error");
         return 1;
     }
+    printf("interface_handler Initialized !\n");
     return 0;
 }
 
