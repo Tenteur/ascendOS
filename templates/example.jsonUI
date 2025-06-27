@@ -1,0 +1,63 @@
+{
+    "type": "group", 
+    "name" : "uniqueName", 
+    "textureGroupID": 0, 
+    "layer": 0, 
+                
+    "subLayer": 0, 
+                   
+    "coord": [0, 0], 
+    "size": { 
+        "width": 100,
+        "height": 100
+    },
+    "items": [ 
+        {
+            "type": "text",
+            "textureGroupID": 2, 
+                                 
+                                 
+            "subLayer": 2,
+            "textContent": "Hello World!", 
+            "fontSize": 10, 
+            "fontName": "Roboto-Regular", 
+            "coord": [10, 10],
+            "size": { 
+                "auto": true
+            }
+        },
+        {
+            "type": "text",
+            "textureGroupID": 2,
+            "textContent": "From another line :)",
+            "fontSize": 10,
+            "fontName": "Roboto-Regular",
+            "coord": [30, 30],
+            "size": { 
+                "auto": true
+            }
+        },
+        {
+            "type": "color",
+            "textureGroupID": 0, 
+            "subLayer": 100, 
+            "colorRGB": [255, 255, 255], 
+            "coord": [50, 50],
+            "size": { 
+                "width": 10,
+                "height": 25
+            }
+        },
+        {
+            "type": "color",
+            "textureGroupID": 0, 
+            "subLayer": 99, 
+            "colorRGBA": [125, 125, 125, 255], 
+            "coord": [10, 25],
+            "size": { 
+                "width": 50,
+                "height": 12
+            }
+        }
+    ]
+}
