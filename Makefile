@@ -21,6 +21,9 @@ TARGET = build/myapp
 # Default rule
 all: $(TARGET)
 
+release: CFLAGS += -O3
+release: clean $(TARGET)
+
 $(TARGET): $(OBJ)
 	$(CC) $(OBJ) -o $@ $(LIBS)
 
