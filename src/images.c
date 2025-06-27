@@ -24,19 +24,12 @@ signed int renderImage(SDL_Renderer *renderer, const char *imagePath, const int 
     if (imageTexture == NULL) {
         printf("Failure!\n");
         return -1;
-    } else {
-        printf("Success!\n");
     }
     SDL_Rect tempRect;
     SDL_QueryTexture(imageTexture, NULL, NULL, &(tempRect.w), &(tempRect.h));
-    printf("1\n");
     tempRect.x = x;
-    printf("2\n");
     tempRect.y = y;
-    printf("3\n");
     SDL_RenderCopy(renderer, imageTexture, NULL, &tempRect);
-    printf("4\n");
     SDL_DestroyTexture(imageTexture);
-    printf("5\n");
     return 0;
 }

@@ -71,14 +71,10 @@ int main(const int argc, const char *argv[]) {
     
     // * SDL2 Initilialized, program running
 
-    signed int success = addFontToList("Roboto-Regular", 10);
-    printf("%u\n", success);
-    success = addFontToList("BebasNeue-Regular", 50);
-    printf("%u\n", success);
-    success = addFontToList("CascadiaMono-Regular", 100);
-    printf("%u\n", success);
-    success = addFontToList("DancingScript-Regular", 200);
-    printf("%u\n", success);
+    addFontToList("Roboto-Regular", 10);
+    addFontToList("BebasNeue-Regular", 50);
+    addFontToList("CascadiaMono-Regular", 100);
+    addFontToList("DancingScript-Regular", 200);
     // ! // TODO: Clean this mess, maybe create a function to remember each input and reactions.
     while (running) {
         SDL_Event event;
