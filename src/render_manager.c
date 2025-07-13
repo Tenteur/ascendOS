@@ -7,7 +7,7 @@
 #include "../include/render_manager.h"
 
 SDL_Renderer *globalRenderer = NULL;
-int *nextItemIDAvailable = NULL;
+static unsigned int nextItemIDAvailable = 0;
 struct itemDataNode *backgroundItemDataNode = NULL;
 struct itemDataNode *middlegroundItemDataNode = NULL;
 struct itemDataNode *foregroundItemDataNode = NULL;
@@ -15,8 +15,8 @@ struct itemDataNode *foregroundItemDataNode = NULL;
 
 signed int render_managerInit(SDL_Renderer *renderer) {
     // @todo: Init other components, might even init the SDL_Renderer but will be done after
-    nextItemIDAvailable = malloc(sizeof(int));
-    *nextItemIDAvailable = 1;
+    // nextItemIDAvailable = malloc(sizeof(int));
+    nextItemIDAvailable = 1;
     globalRenderer = malloc(sizeof(renderer));
     globalRenderer = renderer;
     backgroundItemDataNode = malloc(sizeof(itemDataNode));
@@ -28,8 +28,8 @@ signed int render_managerInit(SDL_Renderer *renderer) {
     return 0;
 }
 
-static int render_managerGetAvailableItemID(int layer) {
-    int IDToReturn = *nextItemIDAvailable;
+static unsigned int render_managerGetAvailableItemID(int layer) {
+    unsigned int IDToReturn = nextItemIDAvailable;
     if (IDToReturn == INT_MAX) {
         ; // @todo: search for the next available id
     }
@@ -37,23 +37,23 @@ static int render_managerGetAvailableItemID(int layer) {
     return IDToReturn;
 }
 
-unsigned int render_managerAddItemToDraw(const unsigned int layer, const signed int sublayer, SDL_Texture *texturePtr, SDL_Surface *surfacePtr, const int x, const int y, const int width, const int height) {
+unsigned int render_managerAddItemToDraw(const unsigned int layer, const unsigned int subLayer, SDL_Texture *texturePtr, SDL_Surface *surfacePtr, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height) {
     itemDataNode *currentNodeCheck = NULL;
     if (layer == 0) { currentNodeCheck = backgroundItemDataNode; }
     else if (layer == 1) { currentNodeCheck = middlegroundItemDataNode; }
     else if (layer == 2) { currentNodeCheck = foregroundItemDataNode; }
-    int itemID = render_managerGetAvailableItemID(layer);
+    unsigned int itemID = render_managerGetAvailableItemID(layer);
     while(true) {
         if (currentNodeCheck->next == NULL) {
             break;
-        } else if (currentNodeCheck->sublayer > sublayer) {
+        } else if (currentNodeCheck->subLayer > subLayer) {
             break;
-        } else if (currentNodeCheck->sublayer == sublayer && currentNodeCheck->itemID < itemID && currentNodeCheck->next->itemID > itemID) {
+        } else if (currentNodeCheck->subLayer == subLayer && currentNodeCheck->itemID < itemID && currentNodeCheck->next->itemID > itemID) {
             break;
         }
     } // Out of the loop: got the node where to add this
     itemDataNode *newItemDataNode = malloc(sizeof(itemDataNode));
-    newItemDataNode->sublayer = sublayer;
+    newItemDataNode->subLayer = subLayer;
     newItemDataNode->itemID = itemID;
     newItemDataNode->texturePtr = texturePtr;
     newItemDataNode->surfacePtr = surfacePtr;
@@ -63,6 +63,7 @@ unsigned int render_managerAddItemToDraw(const unsigned int layer, const signed 
     newItemDataNode->height = height;
     newItemDataNode->next = currentNodeCheck->next;
     currentNodeCheck->next = newItemDataNode;
+    printf("Inside: %u\n", itemID);
     return itemID;
 }
 
@@ -100,8 +101,8 @@ signed int render_managerDrawScene() {
         }
         if (currentItemDataNode->next == NULL) {
             currentLayerDrawn += 1;
-            if (currentLayerDrawn == 1) currentItemDataNode = middlegroundItemDataNode->next;
-            else if (currentLayerDrawn == 2) currentItemDataNode = foregroundItemDataNode->next;
+            if (currentLayerDrawn == 1 && middlegroundItemDataNode->next != NULL) currentItemDataNode = middlegroundItemDataNode->next;
+            else if (currentLayerDrawn == 2 && foregroundItemDataNode->next != NULL) currentItemDataNode = foregroundItemDataNode->next;
             else break;
         } else {
             currentItemDataNode = currentItemDataNode->next;
@@ -111,7 +112,7 @@ signed int render_managerDrawScene() {
     return 0;
 }
 
-signed int render_managerRemoveItem(int layer, int itemID) {
+signed int render_managerRemoveItem(unsigned int layer, unsigned int itemID) {
     itemDataNode *currentItemDataNode = NULL;
     if (layer == 0) { currentItemDataNode = backgroundItemDataNode; }
     else if (layer == 1) { currentItemDataNode = middlegroundItemDataNode; }
@@ -137,4 +138,18 @@ signed int render_managerRemoveItem(int layer, int itemID) {
             return -1;
         }
     }
+}
+
+signed int render_managerFuseTextures(SDL_Renderer *renderer, SDL_Texture *outputTexture, SDL_Texture *firstInputTexture, SDL_Texture *secondInputTexture, SDL_Rect *firstInputCoord, SDL_Rect *secondInputCoord, SDL_Rect *firstInputSRect, SDL_Rect *secondInputSRect) {
+    signed int hasError = 0b0;
+    hasError = hasError ^ SDL_SetRenderTarget(renderer, outputTexture);
+    if (hasError != 0) return -1;
+    hasError = hasError ^ SDL_RenderCopy(renderer, firstInputTexture, firstInputSRect, firstInputCoord);
+    hasError = hasError ^ SDL_RenderCopy(renderer, secondInputTexture, secondInputSRect, secondInputCoord);
+    if (hasError != 0) {
+        printf("had an error during texture fusion\n");
+        return -1;
+    }
+    hasError = hasError ^ SDL_SetRenderTarget(renderer, NULL);
+    return hasError;
 }

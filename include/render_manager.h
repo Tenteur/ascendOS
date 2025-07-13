@@ -16,14 +16,14 @@
  * @param layer is where the item is drawn 
  */
 typedef struct itemDataNode {
-    signed int sublayer;
-    int itemID;
+    unsigned int subLayer;
+    unsigned int itemID;
     SDL_Texture *texturePtr;
     SDL_Surface *surfacePtr;
-    int xCoord;
-    int yCoord;
-    int width;
-    int height;
+    unsigned int xCoord;
+    unsigned int yCoord;
+    unsigned int width;
+    unsigned int height;
     struct itemDataNode *next;
 } itemDataNode;
 
@@ -55,7 +55,7 @@ signed int render_managerDrawScene();
  * @param height The height of the item.
  * @return itemID > 0 if success, 0 if failure.
  */
-unsigned int render_managerAddItemToDraw(const unsigned int layer, const signed int sublayer, SDL_Texture *texturePtr, SDL_Surface *surfacePtr, const int x, const int y, const int width, const int height);
+unsigned int render_managerAddItemToDraw(const unsigned int layer, const unsigned int subLayer, SDL_Texture *texturePtr, SDL_Surface *surfacePtr, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height);
 /**
  * @brief Add a surface to draw to screen.
  * Add a texture to draw and return the id of this item relative to scene
@@ -78,7 +78,7 @@ unsigned int render_managerAddItemToDraw(const unsigned int layer, const signed 
  * @note if both texturePtr and surfacePtr are NULL, return an error.
  * @return itemID > 0 if success, 0 if failure.
  */
-int render_managerGetItemID(SDL_Texture *texturePtr, SDL_Surface *surfacePtr);
+unsigned int render_managerGetItemID(SDL_Texture *texturePtr, SDL_Surface *surfacePtr);
 
 /**
  * @brief Deletes an item from being rendered.
@@ -87,7 +87,7 @@ int render_managerGetItemID(SDL_Texture *texturePtr, SDL_Surface *surfacePtr);
  * @param itemID the ID of the item to delete.
  * @return 0 if success, -1 if failure.
  */
-signed int render_managerRemoveItem(int layer, int itemID);
+signed int render_managerRemoveItem(unsigned int layer, unsigned int itemID);
 
 // /**
 //  * @brief Update an item's position
@@ -99,3 +99,19 @@ signed int render_managerRemoveItem(int layer, int itemID);
 //  * @return 0 if success, -1 if failure.
 //  */
 // signed int render_managerUpdateItemCoordinate(int itemID, int layer, int x, int y);
+
+
+/**
+ * @brief Fuse two textures and destroys them
+ * Create a new texture and output it to the textures' pointer (outputTexture)
+ * The second texture may be drawn over the first one
+ * @param renderer The SDL renderer.
+ * @param outputTexture The pointer of the final texture (need to be as big as the biggest of the two textures) and should already exist
+ * @param firstInputTexture The pointer of the first texture to fuse
+ * @param secondInputTexture The pointer of the second texture to fuse
+ * @param firstInputCoord The coordinate of the first texture relative to the output texture
+ * @param secondInputCoord The coordinate of the second texture relative to the output texture
+ * @param firstInputSRect The texture coordinate of the first texture relative to the output texture (can be defaulted to NULL)
+ * @param secondInputSRect The texture coordinate of the second texture relative to the output texture (can be defaulted to NULL)
+ */
+signed int render_managerFuseTextures(SDL_Renderer *renderer, SDL_Texture *outputTexture, SDL_Texture *firstInputTexture, SDL_Texture *secondInputTexture, SDL_Rect *firstInputCoord, SDL_Rect *secondInputCoord, SDL_Rect *firstInputSRect, SDL_Rect *secondInputSRect);
