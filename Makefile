@@ -1,34 +1,33 @@
-# Compiler
-CC = gcc
+# Compiler and flags
+CC      := gcc
+CFLAGS  := -Wall -Wextra -Iinclude $(shell sdl2-config --cflags)
 
-# SDL2 configuration (evaluated at Makefile parse time)
-SDL_CFLAGS := $(shell sdl2-config --cflags)
-SDL_LIBS   := $(shell sdl2-config --libs)
+# SDL2 and related libraries
+SDL_LIBS := $(shell sdl2-config --libs)
+LIBS     := $(SDL_LIBS) -lSDL2_image -lSDL2_ttf -lSDL2_mixer -lm
 
-# Additional SDL2-related libs
-LIBS = $(SDL_LIBS) -lSDL2_image -lSDL2_ttf -lSDL2_mixer -lm
-
-# Compiler flags
-CFLAGS = -Wall -Wextra -Iinclude $(SDL_CFLAGS)
-
-# Files
-SRC = $(filter-out src/jsoncParser.c, $(wildcard src/*.c))
-OBJ = $(SRC:.c=.o)
+# Source and object files
+SRC := $(filter-out src/jsoncParser.c, $(wildcard src/*.c))
+OBJ := $(SRC:.c=.o)
 
 # Output binary
-TARGET = build/myapp
+TARGET := build/myapp
 
-# Default rule
+.PHONY: all debug release clean
+
+all: CFLAGS += -g -fno-omit-frame-pointer
 all: $(TARGET)
 
+
 release: CFLAGS += -O3
-release: clean $(TARGET)
+release: clean all
 
 $(TARGET): $(OBJ)
 	$(CC) $(OBJ) -o $@ $(LIBS)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
+
 
 # Clean
 clean:
