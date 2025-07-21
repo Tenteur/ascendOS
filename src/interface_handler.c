@@ -7,13 +7,14 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <fcntl.h>
+#include <libxml/parser.h>
+#include <libxml/tree.h>
 
 #include "../include/images.h"
 #include "../include/text.h"
 #include "../include/shapes.h"
 #include "../include/render_manager.h"
 #include "../include/interface_handler.h"
-#include "../include/cJSON.h"
 
 char currentWorkingDirectory[250];
 SDL_Renderer *interfaceRenderer;
@@ -28,7 +29,7 @@ int interface_handlerInit(SDL_Renderer *renderer) {
     return 0;
 }
 
-int interface_handlerLoadScene(char sceneName[15]) {
+xmlDoc *interface_handlerLoadScene(char sceneName[15]) {
     char sceneFilePath[300];
     char *slash = "/templates/";
     strcpy(sceneFilePath, currentWorkingDirectory);
@@ -48,49 +49,16 @@ int interface_handlerLoadScene(char sceneName[15]) {
     if (read(sceneFileFile, sceneContent, sceneFileSize) == -1) {
         printf("Error\n");
     }
-
-    cJSON *json = cJSON_Parse(sceneContent);
-
-    printf("%s\n", cJSON_Print(json));
-
-    interface_handlerGenerateScene(json);
-
-    cJSON_Delete(json);
     
-    return 0;
+    xmlDoc *document = xmlReadFile(sceneFilePath, NULL, 0);
+    if (!document) return NULL;
+
+    // interface_handlerGenerateScene(json);
+    
+    return document;
 }
 
-signed int interface_handlerGenerateScene(cJSON *sceneTemplateJson) {
-    // Check what is the type of the root element
-    cJSON *rootType = cJSON_GetObjectItemCaseSensitive(sceneTemplateJson, "type");
-    char *rootValue = cJSON_GetStringValue(rootType);
-    printf("%s\n", rootValue);
-    if (strcmp(rootValue, "group") == 0) {
-        printf("some logic to develop later\n");
-    }
-    if (strcmp(rootValue, "text") == 0) {
-        printf("Hellklekflklekflk\n");
-        char *fontName = cJSON_GetStringValue(cJSON_GetObjectItemCaseSensitive(sceneTemplateJson, "fontName"));
-        printf("hjkh\n");
-        int fontSize = cJSON_GetNumberValue(cJSON_GetObjectItemCaseSensitive(sceneTemplateJson, "fontSize"));
-        printf("%s and %u\n", fontName, fontSize);
-        printf("zqdsq\n");
-        if (selectFontFromList(fontName, fontSize) == -1) {
-            printf("skibidi\n");
-            signed int result = addFontToList(fontName, fontSize);
-            printf("toilet\n");
-            if (result == 0) {
-                printf("adding\n");
-                SDL_Color SDLYellow = {255, 255, 0, 255};
-                SDL_Texture *hiTexture = SDL_CreateTexture(interfaceRenderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_TARGET, 300, 200);
-                SDL_SetRenderTarget(interfaceRenderer, hiTexture);
-                signed int secondResult = renderTextAtCoord(interfaceRenderer, cJSON_GetStringValue(cJSON_GetObjectItemCaseSensitive(sceneTemplateJson, "textContent")), 0, 0, &SDLYellow, false, NULL);
-                printf("This is the result: %d\n", secondResult);
-                render_managerAddItemToDraw(1, 100, hiTexture, NULL, 100, 50, 300, 200);
-                SDL_SetRenderTarget(interfaceRenderer, NULL);
-            }
-        }
-    }
-    return 0;
+signed int interface_handlerGenerateScene(xmlDoc *document) {
     
+    return 0;   
 }

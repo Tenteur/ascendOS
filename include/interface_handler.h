@@ -21,6 +21,6 @@ int interface_handlerQuit();
  * @brief Will load a scene from a file contained in the templates directory
  * @param sceneName The name of the file where the scene is to be loader (as a .jsonUI)
  */
-int interface_handlerLoadScene(char sceneName[15]);
+xmlDoc *interface_handlerLoadScene(char sceneName[15]);
 
-signed int interface_handlerGenerateScene(cJSON *sceneTemplateJson);
+signed int interface_handlerGenerateScene(xmlDoc *document);

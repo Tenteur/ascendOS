@@ -1,10 +1,13 @@
 # Compiler and flags
 CC      := gcc
-CFLAGS  := -Wall -Wextra -Iinclude $(shell sdl2-config --cflags)
+CFLAGS  := -Wall -Wextra -Iinclude \
+            $(shell sdl2-config --cflags) \
+            $(shell pkg-config --cflags libxml-2.0)
 
 # SDL2 and related libraries
 SDL_LIBS := $(shell sdl2-config --libs)
-LIBS     := $(SDL_LIBS) -lSDL2_image -lSDL2_ttf -lSDL2_mixer -lm
+XML_LIBS := $(shell pkg-config --libs libxml-2.0)
+LIBS     := $(SDL_LIBS) -lSDL2_image -lSDL2_ttf -lSDL2_mixer -lm $(XML_LIBS)
 
 # Source and object files
 SRC := $(filter-out src/jsoncParser.c, $(wildcard src/*.c))
@@ -18,7 +21,6 @@ TARGET := build/myapp
 all: CFLAGS += -g -fno-omit-frame-pointer
 all: $(TARGET)
 
-
 release: CFLAGS += -O3
 release: clean all
 
@@ -27,7 +29,6 @@ $(TARGET): $(OBJ)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
-
 
 # Clean
 clean:
