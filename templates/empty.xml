@@ -1,0 +1,3 @@
+<root> <!-- This takes by default all the window and should always be present -->
+    <text fontName="Roboto-Regular" fontSize="10" text="Hello XML!"/>
+</root>

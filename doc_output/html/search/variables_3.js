@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['fontname_0',['fontName',['../structfontListStruct.html#a1fda1287d8e2c2934d0a008bbc9318f5',1,'fontListStruct']]],
-  ['fontptr_1',['fontPtr',['../structfontListStruct.html#a2976f0a512de1584859d3a68be604380',1,'fontListStruct']]],
-  ['fontsize_2',['fontSize',['../structfontListStruct.html#a434a5897a20bace31a10e825fbbdc40a',1,'fontListStruct']]]
+  ['depth_0',['depth',['../structparse__buffer.html#af613c4ed7d73f76c60c50d1bcf4c67a0',1,'parse_buffer::depth'],['../structprintbuffer.html#aa7311b5da38ff8d1737824c611b48732',1,'printbuffer::depth']]]
 ];

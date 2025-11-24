@@ -2,12 +2,15 @@
 CC      := gcc
 CFLAGS  := -Wall -Wextra -Iinclude \
             $(shell sdl2-config --cflags) \
-            $(shell pkg-config --cflags libxml-2.0)
+            $(shell pkg-config --cflags yaml-0.1)
+CFLAGS += -g -O0
+LANGUAGE := C
+export LANGUAGE
 
 # SDL2 and related libraries
 SDL_LIBS := $(shell sdl2-config --libs)
-XML_LIBS := $(shell pkg-config --libs libxml-2.0)
-LIBS     := $(SDL_LIBS) -lSDL2_image -lSDL2_ttf -lSDL2_mixer -lm $(XML_LIBS)
+YAML_LIBS := $(shell pkg-config --libs yaml-0.1)
+LIBS     := $(SDL_LIBS) -lSDL2_image -lSDL2_ttf -lSDL2_mixer -lm $(YAML_LIBS)
 
 # Source and object files
 SRC := $(filter-out src/jsoncParser.c, $(wildcard src/*.c))

@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['texturedatastruct_0',['textureDataStruct',['../utils_8h.html#a242a8bf539792bce306fd36426a9bf3b',1,'utils.h']]],
-  ['transitionproperties_1',['transitionProperties',['../utils_8h.html#a059bbfcf970b575b99fcc9da1783aeaf',1,'utils.h']]]
+  ['internal_5fhooks_0',['internal_hooks',['../cJSON_8c.html#a584019da8f9922a232f41f6f6ffa4ede',1,'cJSON.c']]],
+  ['itemdatanode_1',['itemDataNode',['../render__manager_8h.html#af96fe96efc36f9675b24ec80c75230d1',1,'render_manager.h']]]
 ];

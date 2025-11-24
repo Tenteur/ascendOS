@@ -34,7 +34,7 @@ typedef struct itemDataNode {
 signed int render_managerInit(SDL_Renderer *renderer);
 
 /**
- * @brief Draws complete or partial scene
+ * @brief Draws complete or partial scene.
  * @param layer 1 for background, 2 for middle, 3 for foreground. Draws all upper scene (1 draws 1, 2 and 3). If 0, draws everything.
  * @note Will probably be modified since there is no real use case for drawing scenes independently.
  * @return 0 if success, -1 if failure.
@@ -90,7 +90,7 @@ unsigned int render_managerGetItemID(SDL_Texture *texturePtr, SDL_Surface *surfa
 signed int render_managerRemoveItem(unsigned int layer, unsigned int itemID);
 
 // /**
-//  * @brief Update an item's position
+//  * @brief Update an item's position.
 //  * Change the item's X and Y coordinate
 //  * @param itemID the ID of the item
 //  * @param layer the ID of the scene where the item is located
@@ -102,7 +102,7 @@ signed int render_managerRemoveItem(unsigned int layer, unsigned int itemID);
 
 
 /**
- * @brief Fuse two textures and destroys them
+ * @brief Fuse two textures and destroys them.
  * Create a new texture and output it to the textures' pointer (outputTexture)
  * The second texture may be drawn over the first one
  * @param renderer The SDL renderer.
@@ -115,3 +115,10 @@ signed int render_managerRemoveItem(unsigned int layer, unsigned int itemID);
  * @param secondInputSRect The texture coordinate of the second texture relative to the output texture (can be defaulted to NULL)
  */
 signed int render_managerFuseTextures(SDL_Renderer *renderer, SDL_Texture *outputTexture, SDL_Texture *firstInputTexture, SDL_Texture *secondInputTexture, SDL_Rect *firstInputCoord, SDL_Rect *secondInputCoord, SDL_Rect *firstInputSRect, SDL_Rect *secondInputSRect);
+
+/**
+ * @brief Removes every items from a scene, rendering it empty.
+ * Goes through every items and destroy the textures and free the surfaces as well as malloc's.
+ * @return 0 if everything went well, -1 if an error occured.
+ */
+signed int render_managerDeleteScene();

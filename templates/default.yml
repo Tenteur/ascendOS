@@ -1,0 +1,43 @@
+# Top-level group (parent container)
+type: "group"
+name: "uniqueName"      # Optional identifier
+textureGroupID: 0       # Ignored for groups
+layer: 0                # Background/middleground/foreground
+subLayer: 0            # Draw order
+coord: [0, 0]          # Top-left coordinates [x, y]
+size:                  # Dimensions
+  width: 100
+  height: 100
+
+# List of child items
+items:
+  # First text item
+  - type: "text"
+    textureGroupID: 2   # Shared texture group
+    subLayer: 2         # Draw order
+    textContent: "Hello World!"
+    fontSize: 10
+    fontName: "Roboto-Regular"
+    coord: [10, 10]      # Relative to parent
+    size:
+      auto: true         # Auto-calculate size
+
+  # Second text item
+  - type: "text"
+    textureGroupID: 2
+    textContent: "From another line :)"
+    fontSize: 10
+    fontName: "Roboto-Regular"
+    coord: [30, 30]
+    size:
+      auto: true
+
+  # Color rectangle
+  - type: "color"
+    textureGroupID: 0   # Solo texture
+    subLayer: 100       # Draw last
+    colorRGB: [255, 255, 255]
+    coord: [50, 50]
+    size:
+      width: 10
+      height: 25

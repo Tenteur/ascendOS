@@ -30,6 +30,7 @@ signed int render_managerInit(SDL_Renderer *renderer) {
 
 static unsigned int render_managerGetAvailableItemID(int layer) {
     unsigned int IDToReturn = nextItemIDAvailable;
+    nextItemIDAvailable += 1;
     if (IDToReturn == INT_MAX) {
         ; // @todo: search for the next available id
     }
@@ -63,7 +64,6 @@ unsigned int render_managerAddItemToDraw(const unsigned int layer, const unsigne
     newItemDataNode->height = height;
     newItemDataNode->next = currentNodeCheck->next;
     currentNodeCheck->next = newItemDataNode;
-    printf("Inside: %u\n", itemID);
     return itemID;
 }
 
@@ -71,6 +71,8 @@ signed int render_managerDrawScene() {
     SDL_Rect currentRect;
     itemDataNode *currentItemDataNode = NULL;
     unsigned int currentLayerDrawn;
+    
+    SDL_RenderClear(globalRenderer);
     if (backgroundItemDataNode->next == NULL) {
         if (middlegroundItemDataNode->next == NULL) {
             if (foregroundItemDataNode->next == NULL) {
@@ -142,14 +144,65 @@ signed int render_managerRemoveItem(unsigned int layer, unsigned int itemID) {
 
 signed int render_managerFuseTextures(SDL_Renderer *renderer, SDL_Texture *outputTexture, SDL_Texture *firstInputTexture, SDL_Texture *secondInputTexture, SDL_Rect *firstInputCoord, SDL_Rect *secondInputCoord, SDL_Rect *firstInputSRect, SDL_Rect *secondInputSRect) {
     signed int hasError = 0b0;
-    hasError = hasError ^ SDL_SetRenderTarget(renderer, outputTexture);
+    hasError = hasError | SDL_SetRenderTarget(renderer, outputTexture);
     if (hasError != 0) return -1;
-    hasError = hasError ^ SDL_RenderCopy(renderer, firstInputTexture, firstInputSRect, firstInputCoord);
-    hasError = hasError ^ SDL_RenderCopy(renderer, secondInputTexture, secondInputSRect, secondInputCoord);
+    hasError = hasError | SDL_RenderCopy(renderer, firstInputTexture, firstInputSRect, firstInputCoord);
+    hasError = hasError | SDL_RenderCopy(renderer, secondInputTexture, secondInputSRect, secondInputCoord);
     if (hasError != 0) {
         printf("had an error during texture fusion\n");
         return -1;
     }
     hasError = hasError ^ SDL_SetRenderTarget(renderer, NULL);
     return hasError;
+}
+
+signed int render_managerDeleteScene() {
+    register itemDataNode *itemDataNodeToClear = backgroundItemDataNode->next;
+    while(1) {
+        if(itemDataNodeToClear == NULL) break;
+        register SDL_Texture *textureToDestroy = itemDataNodeToClear->texturePtr;
+        register SDL_Surface *surfaceToDestroy = itemDataNodeToClear->surfacePtr;
+        if(textureToDestroy) SDL_DestroyTexture(textureToDestroy);
+        else if (surfaceToDestroy) SDL_FreeSurface(itemDataNodeToClear->surfacePtr);
+        register itemDataNode *nextDataNode = itemDataNodeToClear->next;
+        free(itemDataNodeToClear);
+        itemDataNodeToClear = nextDataNode;
+        if(nextDataNode == NULL) break;
+    }
+    itemDataNodeToClear = middlegroundItemDataNode->next;
+    while(1) {
+        if(itemDataNodeToClear == NULL) break;
+        register SDL_Texture *textureToDestroy = itemDataNodeToClear->texturePtr;
+        register SDL_Surface *surfaceToDestroy = itemDataNodeToClear->surfacePtr;
+        if(textureToDestroy) SDL_DestroyTexture(textureToDestroy);
+        else if (surfaceToDestroy) SDL_FreeSurface(itemDataNodeToClear->surfacePtr);
+        register itemDataNode *nextDataNode = itemDataNodeToClear->next;
+        free(itemDataNodeToClear);
+        itemDataNodeToClear = nextDataNode;
+        if(nextDataNode == NULL) break;
+    }
+    itemDataNodeToClear = foregroundItemDataNode->next;
+    while(1) {
+        if(itemDataNodeToClear == NULL) break;
+        register SDL_Texture *textureToDestroy = itemDataNodeToClear->texturePtr;
+        register SDL_Surface *surfaceToDestroy = itemDataNodeToClear->surfacePtr;
+        if(textureToDestroy) SDL_DestroyTexture(textureToDestroy);
+        else if (surfaceToDestroy) SDL_FreeSurface(itemDataNodeToClear->surfacePtr);
+        register itemDataNode *nextDataNode = itemDataNodeToClear->next;
+        free(itemDataNodeToClear);
+        itemDataNodeToClear = nextDataNode;
+        if(nextDataNode == NULL) break;
+    }
+    // register SDL_Renderer *renderer = globalRenderer;
+    // free(globalRenderer);
+    // render_managerInit(renderer);
+    nextItemIDAvailable = 1;
+    backgroundItemDataNode = malloc(sizeof(itemDataNode));
+    backgroundItemDataNode->next = NULL; // The first textureDataNode will contain no data, used only as the head of the node.
+    middlegroundItemDataNode = malloc(sizeof(itemDataNode));
+    middlegroundItemDataNode->next = NULL; // The first textureDataNode will contain no data, used only as the head of the node.
+    foregroundItemDataNode = malloc(sizeof(itemDataNode));
+    foregroundItemDataNode->next = NULL; // The first textureDataNode will contain no data, used only as the head of the node.
+    return 0;
+    // @todo Detect when an error occurs and decide what to do.
 }
