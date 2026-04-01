@@ -10,8 +10,8 @@
 #include <stdint.h>
 #include <unistd.h>
 #include <stdbool.h>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
+#include <SDL3/SDL.h>
+#include <SDL3_ttf/SDL_ttf.h>
 
 #include "../include/text.h"
 #include "../include/utils.h"
@@ -26,9 +26,9 @@
 #include <linux/limits.h>
 // #include <libxml/parser.h>
 
-SDL_Color SDLRedColor = {255, 0, 0, 255};
-SDL_Color SDLGreenColor = {0, 255, 0, 255};
-SDL_Color SDLBlueColor = {0, 0, 255, 255};
+SDL_FColor SDLRedColor = {255, 0, 0, 255};
+SDL_FColor SDLGreenColor = {0, 255, 0, 255};
+SDL_FColor SDLBlueColor = {0, 0, 255, 255};
 
 int main(const int argc, const char *argv[]) {
 
@@ -52,19 +52,19 @@ int main(const int argc, const char *argv[]) {
         return 1;
     }
 
-    // * Variables definition finished. Initialization of SDL2
+    // * Variables definition finished. Initialization of SDL3
     
-    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER);
+    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMEPAD);
     
-    struct SDL_DisplayMode screenInfo;
-    SDL_GetCurrentDisplayMode(0, &screenInfo);
-    printf("%u, %u, %u\n", screenInfo.w, screenInfo.h, screenInfo.refresh_rate);
+    // struct SDL_DisplayMode screenInfo;
+    // SDL_GetCurrentDisplayMode(&screenInfo);
+    // printf("%u, %u, %u\n", screenInfo.w, screenInfo.h, screenInfo.refresh_rate);
     
-    SDL_Window *window = SDL_CreateWindow("First UI", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, 0); // SDL_WINDOW_FULLSCREEN
-    SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-    
+    SDL_Window *window = SDL_CreateWindow("First UI", 800, 600, 0); // SDL_WINDOW_FULLSCREEN
+    SDL_Renderer *renderer = SDL_CreateRenderer(window, NULL);
+
     unsigned int hi = SDL_GetWindowPixelFormat(window);
-    char *hiName = SDL_GetPixelFormatName(hi);
+    char *hiName = (char*)SDL_GetPixelFormatName(hi);
     printf("%u, %s\n", hi, hiName);
 
     unsigned int numberOfSpacePressed = 0;
@@ -81,11 +81,17 @@ int main(const int argc, const char *argv[]) {
     bool running = true;
     AppState state = STATE_LOGIN;
     
-    // * SDL2 Initilialized, program running
+    // * SDL2 Initialized, program running
     
     addFontToList("Roboto-Regular", 10);
+    signed int resultFont = addFontToList("comic", 100);
+    resultFont = resultFont | selectFontFromList("comic", 100);
+    printf("font: %i\n", resultFont);
     // addFontToList("BebasNeue-Regular", 50);
     // addFontToList("CascadiaMono-Regular", 100);
+    // const char *hie = "hello!";
+    // const char *hier = "oo";
+    
     // addFontToList("DancingScript-Regular", 200);
     
     // ! // TODO: Clean this mess, maybe create a function to remember each input and reactions.
@@ -97,56 +103,68 @@ int main(const int argc, const char *argv[]) {
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
             // printf("%u\n", );
-            if (event.type == SDL_QUIT) running = false;
-            if (event.type == SDL_KEYDOWN) {
-                if(event.key.keysym.sym == SDLK_SPACE) {
+            if (event.type == SDL_EVENT_QUIT) running = false;
+            if (1) {
+                if(event.key.key == SDLK_SPACE) {
+
                     numberOfSpacePressed += 1;
                     // char fuck[50] = "/mnt/DataDisk/ascendOS/templates/basic.yml";
                     printf("Parsing yaml file with space press number: %u\n", numberOfSpacePressed);
                     render_managerDeleteScene();
                     parse_yaml(hell);
+                    // SDL_Texture *secondText = generateTextTexture(renderer, hier, &SDLRedColor, 0, 0);
+                    // SDL_Texture *firstText = generateTextTexture(renderer, hie, &SDLRedColor, 0, 0);
+                    // printf("text success: %i\n", firstText && secondText);
+                    // render_managerAddItemToDraw(2, 50, firstText, NULL, 100, 100, 239, 118);
+                    // render_managerAddItemToDraw(2, 100, firstText, NULL, 100, 100, 239, 118);
+                    // render_managerAddItemToDraw(2, 200, secondText, NULL, 200, 400, 114, 118);
                 }
-                if (event.key.keysym.sym == SDLK_RETURN) {
+                if (event.key.key== SDLK_RETURN) {
                     state = (state == STATE_LOGIN) ? STATE_HOME : STATE_LOGIN;
-                } else if (event.key.keysym.sym == SDLK_ESCAPE) {
+                } else if (event.key.key == SDLK_ESCAPE) {
                     running = false;
                     break;
-                } else if (event.key.keysym.sym == SDLK_c) {
+                } else if (event.key.key == SDLK_C) {
                     if (whatToMove == &FPSLocation) {
                         whatToMove = &backgroundColorBox;
                     } else {
                         whatToMove = &FPSLocation;
                     }
-                } else if (event.key.keysym.sym == SDLK_m) {
+                } else if (event.key.key == SDLK_H) {
                     printf("Transition function has been removed since it is deprecated and do not work\n");
-                } else if(event.key.keysym.sym == SDLK_v) {
+                } else if(event.key.key == SDLK_V) {
                     printf("Removed ability to disable VSync\n");
-                } else if (event.key.keysym.sym == SDLK_o) {
+                } else if (event.key.key == SDLK_O) {
                     printf("Modifying circle precision has been removed\n");
-                } else if (event.key.keysym.sym == SDLK_l) {
+                } else if (event.key.key == SDLK_L) {
                     printf("Modifying circle precision has been removed\n");
                 }
-                else if (event.key.keysym.sym == SDLK_LEFT) {
+                else if (event.key.key == SDLK_LEFT) {
                     whatToMove->x -= 1;
-                } else if (event.key.keysym.sym == SDLK_RIGHT) {
+                } else if (event.key.key == SDLK_RIGHT) {
                     whatToMove->x += 1;
-                } else if (event.key.keysym.sym == SDLK_UP) {
+                } else if (event.key.key == SDLK_UP) {
                     whatToMove->y -= 1;
-                } else if (event.key.keysym.sym == SDLK_DOWN) {
+                } else if (event.key.key == SDLK_DOWN) {
                     whatToMove->y += 1;
-                } else if (event.key.keysym.sym == SDLK_q) {
+                } else if (event.key.key == SDLK_G) {
                     whatToMove->w -= 1;
-                } else if (event.key.keysym.sym == SDLK_d) {
+                } else if (event.key.key == SDLK_D) {
                     whatToMove->w += 1;
-                } else if (event.key.keysym.sym == SDLK_z) {
+                } else if (event.key.key == SDLK_Z) {
                     whatToMove->h -= 1;
-                } else if (event.key.keysym.sym == SDLK_s) {
+                } else if (event.key.key == SDLK_S) {
                     whatToMove->h += 1;
                 }
             }
         };
         
-        frameStartTime = SDL_GetTicks64();
+        frameStartTime = SDL_GetTicks();
+
+
+        
+
+
 
         // SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Clear screen
         // SDL_RenderClear(renderer);
@@ -180,7 +198,7 @@ int main(const int argc, const char *argv[]) {
         // SDL_FreeSurface(tempSurface);
         // SDL_DestroyTexture(tempTexture);
 
-        // SDL_Color tempColor = {255, 255, 255, 255};
+        // SDL_FColor tempColor = {255, 255, 255, 255};
         // drawCircleAtCoord(renderer, 100, 100, 100, 100, tempColor);
         // drawCircleAtCoord(renderer, 300, 300, 50, 100, tempColor);
         

@@ -3,18 +3,22 @@
  * @brief images.c contains implementations of functions declared inside images.h
  */
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
+#include <SDL3/SDL.h>
+#include <SDL3_image/SDL_image.h>
 #include "../include/images.h"
 
+#include <stdlib.h>
+#include <stdio.h>
+
+
 signed int imagesInit() {
-    unsigned int result = IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG);
-    if(result == (IMG_INIT_JPG | IMG_INIT_PNG)) {
-        printf("images Initialized !\n");
-    } else {
-        printf("images NOT Initialized !\n");
-        return -1;
-    }
+    // unsigned int result = IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG);
+    // if(result == (IMG_INIT_JPG | IMG_INIT_PNG)) {
+    //     printf("images Initialized !\n");
+    // } else {
+    //     printf("images NOT Initialized !\n");
+    //     return -1;
+    // }
     return 0;
 }
 
@@ -26,16 +30,16 @@ SDL_Surface *loadImageAsSurface(const char *imagePath) {
 }
 
 signed int renderImage(SDL_Renderer *renderer, const char *imagePath, const int x, const int y) {
-    SDL_Texture *imageTexture = loadImageAsTexture(renderer, imagePath);
-    if (imageTexture == NULL) {
-        printf("Failure!\n");
-        return -1;
-    }
-    SDL_Rect tempRect;
-    SDL_QueryTexture(imageTexture, NULL, NULL, &(tempRect.w), &(tempRect.h));
-    tempRect.x = x;
-    tempRect.y = y;
-    SDL_RenderCopy(renderer, imageTexture, NULL, &tempRect);
-    SDL_DestroyTexture(imageTexture);
+    // SDL_Texture *imageTexture = loadImageAsTexture(renderer, imagePath);
+    // if (imageTexture == NULL) {
+    //     printf("Failure!\n");
+    //     return -1;
+    // }
+    // SDL_Rect tempRect;
+    // SDL_QueryTexture(imageTexture, NULL, NULL, &(tempRect.w), &(tempRect.h));
+    // tempRect.x = x;
+    // tempRect.y = y;
+    // SDL_RenderCopy(renderer, imageTexture, NULL, &tempRect);
+    // SDL_DestroyTexture(imageTexture);
     return 0;
 }

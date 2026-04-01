@@ -1,6 +1,8 @@
 build/
 static/
 .vscode/
+.idea/
+
 doxygen-awesome-css
 *.o
 *.log

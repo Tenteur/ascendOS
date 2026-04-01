@@ -6,7 +6,7 @@
  * Once this script is complete, should disallow the use of raw SDL2 rendering.
  */
 
-#include <SDL2/SDL.h>
+#include <SDL3/SDL.h>
 #include <stdbool.h>
 
 
@@ -114,7 +114,7 @@ signed int render_managerRemoveItem(unsigned int layer, unsigned int itemID);
  * @param firstInputSRect The texture coordinate of the first texture relative to the output texture (can be defaulted to NULL)
  * @param secondInputSRect The texture coordinate of the second texture relative to the output texture (can be defaulted to NULL)
  */
-signed int render_managerFuseTextures(SDL_Renderer *renderer, SDL_Texture *outputTexture, SDL_Texture *firstInputTexture, SDL_Texture *secondInputTexture, SDL_Rect *firstInputCoord, SDL_Rect *secondInputCoord, SDL_Rect *firstInputSRect, SDL_Rect *secondInputSRect);
+signed int render_managerFuseTextures(SDL_Renderer *renderer, SDL_Texture *outputTexture, SDL_Texture *firstInputTexture, SDL_Texture *secondInputTexture, SDL_FRect *firstInputCoord, SDL_FRect *secondInputCoord, SDL_FRect *firstInputSRect, SDL_FRect *secondInputSRect);
 
 /**
  * @brief Removes every items from a scene, rendering it empty.

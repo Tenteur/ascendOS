@@ -1,4 +1,5 @@
 items:
+  # smile :)
   - item:
     type: rect
     position: [0, 0]
@@ -8,7 +9,7 @@ items:
     type: rect
     position: [300, 0]
     size: [100, 100]
-    color: [230, 223, 172]
+    color: [255, 255, 255]
   - item:
     type: rect
     position: [0, 200]
@@ -25,11 +26,28 @@ items:
     size: [100, 100]
     color: [230, 223, 172]
   - item:
+     type: text
+     textContent: "Hello world!"
+     position: [0, 0]
+     fontSize: 20
+     fontFamily: default
+     textColor: [255, 125, 0]
+     size: auto
+  - item:
     type: text
-    text: "Hello world!"
-    position: [0, 0]
-    fontSize: 20
+    textContent: "w"
+    position: [200, 100]
+    fontSize: 10
     fontFamily: default
-    color: [0, 0, 0]
+    textColor: [125, 0, 255]
+    size: auto
+  - item:
+    type: text
+    textContent: "w"
+    position: [100, 50]
+    fontSize: 10
+    fontFamily: default
+    textColor: [0, 125, 255]
+    size: auto
 # layer: 0
 # subLayer: 0

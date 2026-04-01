@@ -4,8 +4,8 @@
  */
 
 #include <stdbool.h>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
+#include <SDL3/SDL.h>
+#include <SDL3_ttf/SDL_ttf.h>
 
 /**
  * @brief Used to initialize the variables and modules needed for text.c
@@ -33,9 +33,9 @@ typedef struct fontListStruct {
  * @param useCustomSize should use the customSize ?
  * @return 0 if success, -1 if failure
  */
-signed int renderTextAtCoord(SDL_Renderer *renderer, const char *text, const int x, const int y, SDL_Color *textColor, bool useCustomSize, SDL_Rect *customSizeRect);
+signed int renderTextAtCoord(SDL_Renderer *renderer, const char *text, const int x, const int y, SDL_FColor *textColor, bool useCustomSize, SDL_Rect *customSizeRect);
 // Generate text texture and return it as a pointer
-SDL_Texture *generateTextTexture(SDL_Renderer *renderer, const char *text, const SDL_Color *textColor);
+SDL_Texture *generateTextTexture(SDL_Renderer *renderer, const char *text, const SDL_FColor *textColor, unsigned int sizeX, unsigned int sizeY);
 // Return a pointer of a font based on the name and size asked
 /**
  * @brief Add a font to be selected

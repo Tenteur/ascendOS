@@ -5,7 +5,7 @@
  * This code aims to translate a .jsonUI file to actual rendering by using images, text and all available means.
  */
 
- #include <SDL2/SDL.h>
+ #include <SDL3/SDL.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <fcntl.h>
@@ -32,6 +32,7 @@ int interface_handlerLoadScene(const char *filename);
 int parse_yaml(const char *filename);
 
 int parse_rect(yaml_parser_t parser, yaml_event_t event);
+int parse_text(yaml_parser_t parser, yaml_event_t event);
 unsigned int conv(const yaml_char_t *value);
 
 int interface_handlerGenerateScene();

@@ -5,7 +5,7 @@
  * @note Is not fully implemented, lots of things missing
  */
 
-#include <SDL2/SDL.h>
+#include <SDL3/SDL.h>
 
 /**
  * @brief Draw circle on screen
@@ -16,7 +16,7 @@
  * @param precision number of segments to draw as int
  * @return 0 if success, -1 if failure
  */
-signed int drawCircleAtCoord(SDL_Renderer *renderer, int x, int y, const float radius, const int precision, const SDL_Color color);
+signed int drawCircleAtCoord(SDL_Renderer *renderer, int x, int y, const float radius, const int precision, const SDL_FColor color);
 /**
  * @brief Draw a square on screen
  * Draw a square with a given color, coordinates and size. The origin of the square is top left
@@ -26,7 +26,7 @@ signed int drawCircleAtCoord(SDL_Renderer *renderer, int x, int y, const float r
  * @param color the color of the square
  * @return 0 if success, -1 if failure
  */
-signed int drawSquareAtCoord(SDL_Renderer *renderer, const int x, const int y, const int size, const SDL_Color color);
+signed int drawRectAtCoord(SDL_Renderer *renderer, const int x, const int y, const int xsize, const int ysize, const SDL_FColor color);
 /**
  * @brief Draw a rectangle on screen
  * Draw a rectangle with a given color, coordinates and size. The origin of the rectange is top left
@@ -37,4 +37,4 @@ signed int drawSquareAtCoord(SDL_Renderer *renderer, const int x, const int y, c
  * @param color the color of the square
  * @return 0 if success, -1 if failure
  */
-signed int drawRectAtCoord(SDL_Renderer *renderer, const int x, const int y, const int xsize, const int ysize, const SDL_Color color);
+signed int drawRectAtCoord(SDL_Renderer *renderer, const int x, const int y, const int xsize, const int ysize, const SDL_FColor color);

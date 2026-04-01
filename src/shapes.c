@@ -4,11 +4,13 @@
  */
 
 
-#include <SDL2/SDL.h>
+#include <SDL3/SDL.h>
 #include "../include/shapes.h"
 
+#include <math.h>
 
-signed int drawCircleAtCoord(SDL_Renderer *renderer, int x, int y, const float radius, const int precision, const SDL_Color color) { //@todo take a pointer for color
+
+signed int drawCircleAtCoord(SDL_Renderer *renderer, int x, int y, const float radius, const int precision, const SDL_FColor color) { //@todo take a pointer for color
 	const float PI = 3.14;
     const float increment = 2.0f * PI / precision; // 2 PI Rad / precision (higher, lower increment so higher precision but slower)
     SDL_Vertex vertices[precision + 2]; // Number of vertices
@@ -42,7 +44,7 @@ signed int drawCircleAtCoord(SDL_Renderer *renderer, int x, int y, const float r
     return 0;
 }
 
-signed int drawSquareAtCoord(SDL_Renderer *renderer, const int x, const int y, const int size, const SDL_Color color) {
+signed int drawSquareAtCoord(SDL_Renderer *renderer, const int x, const int y, const int size, const SDL_FColor color) {
     SDL_Vertex vertexList[6];
 
     vertexList[0].position.x = x;
@@ -80,7 +82,7 @@ signed int drawSquareAtCoord(SDL_Renderer *renderer, const int x, const int y, c
     }
 }
 
-signed int drawRectAtCoord(SDL_Renderer *renderer, const int x, const int y, const int xsize, const int ysize, const SDL_Color color) {
+signed int drawRectAtCoord(SDL_Renderer *renderer, const int x, const int y, const int xsize, const int ysize, const SDL_FColor color) {
     SDL_Vertex vertexList[6];
 
     vertexList[0].position.x = x;
