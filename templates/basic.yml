@@ -1,0 +1,35 @@
+items:
+  - item:
+    type: rect
+    position: [0, 0]
+    size: [100, 100]
+    color: [230, 223, 172]
+  - item:
+    type: rect
+    position: [300, 0]
+    size: [100, 100]
+    color: [230, 223, 172]
+  - item:
+    type: rect
+    position: [0, 200]
+    size: [100, 100]
+    color: [230, 223, 172]
+  - item:
+    type: rect
+    position: [100, 300]
+    size: [200, 100]
+    color: [230, 223, 172]
+  - item:
+    type: rect
+    position: [300, 200]
+    size: [100, 100]
+    color: [230, 223, 172]
+  - item:
+    type: text
+    text: "Hello world!"
+    position: [0, 0]
+    fontSize: 20
+    fontFamily: default
+    color: [0, 0, 0]
+# layer: 0
+# subLayer: 0

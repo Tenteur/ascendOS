@@ -1,0 +1,11 @@
+<Interface version="0.1a">
+    <Group x="0" y="0" height="100" width="200" id="InitialGroup">
+        <Text text="Hello" x="10" y="10" fontName="Roboto-Regular" fontSize="10"/>
+    </Group>
+    <Button id="play" text="Play" x="100" y="50" width="200" height="40"/>
+    <Button id="settings" text="Settings" x="100" y="100" width="200" height="40"/>
+    <Label id="version" text="v1.0.0" x="10" y="400"/>
+</Interface>
+<!-- <macro id="settings">
+    These can be used to define with an ID but will be developped later.
+</macro> -->

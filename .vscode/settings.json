@@ -8,11 +8,11 @@
         "utils.C": "c",
         "sdl_ttf.h": "c",
         "render_manager.h": "c",
-        "stat.h": "c",
-        "atomic": "c",
-        "fstream": "c",
-        "ostream": "c",
-        "sstream": "c",
-        "*.inc": "c"
-    }
+        "tree.h": "c",
+        "images.h": "c",
+        "parser.h": "c"
+    },
+    "C_Cpp.codeAnalysis.clangTidy.checks.disabled": [
+        "clang-diagnostic-error"
+    ]
 }

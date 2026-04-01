@@ -1,6 +1,6 @@
 {
     "type": "group", // type of the current item (since this is the parent, it is likely to be a group). A group has no render effect (but its children yes).
-    "name" : "uniqueName", // The name that can be used to reference to this element, can also have no name.
+    "name" : "uniqueName", // The name that can be used to reference to this element, can also have no name. (maybe will not be used)
     "textureGroupID": 0, // Since this is a group (parent), the textureGroupID will be ignored so should be 0 to avoid any problem (0 will be ignored).
     "layer": 0, // Is this on the background, middleground or foreground (0, 1 or 2).
                 // Isn't needed for the children since it is inherited from the parent.

@@ -22,7 +22,9 @@
 
 #include <unistd.h>
 #include <stdio.h>
+// #include <libxml/tree.h>
 #include <linux/limits.h>
+// #include <libxml/parser.h>
 
 SDL_Color SDLRedColor = {255, 0, 0, 255};
 SDL_Color SDLGreenColor = {0, 255, 0, 255};
@@ -61,26 +63,49 @@ int main(const int argc, const char *argv[]) {
     SDL_Window *window = SDL_CreateWindow("First UI", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, 0); // SDL_WINDOW_FULLSCREEN
     SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     
+    unsigned int hi = SDL_GetWindowPixelFormat(window);
+    char *hiName = SDL_GetPixelFormatName(hi);
+    printf("%u, %s\n", hi, hiName);
+
+    unsigned int numberOfSpacePressed = 0;
+
     textInit();
     imagesInit();
     render_managerInit(renderer);
-    interface_handlerInit();
+    interface_handlerInit(renderer);
+    // char template[15] = "example.jsonUI";
+    // char empty[15] = "interface.xml";
+    // interface_handlerGenerateScene(interface_handlerLoadScene(empty));
+    
     
     bool running = true;
     AppState state = STATE_LOGIN;
     
     // * SDL2 Initilialized, program running
-
+    
     addFontToList("Roboto-Regular", 10);
-    addFontToList("BebasNeue-Regular", 50);
-    addFontToList("CascadiaMono-Regular", 100);
-    addFontToList("DancingScript-Regular", 200);
+    // addFontToList("BebasNeue-Regular", 50);
+    // addFontToList("CascadiaMono-Regular", 100);
+    // addFontToList("DancingScript-Regular", 200);
+    
     // ! // TODO: Clean this mess, maybe create a function to remember each input and reactions.
+    
+    const char *hell = "/mnt/DataDisk/ascendOS/templates/basic.yml";
+    parse_yaml(hell);
+    
     while (running) {
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
+            // printf("%u\n", );
             if (event.type == SDL_QUIT) running = false;
             if (event.type == SDL_KEYDOWN) {
+                if(event.key.keysym.sym == SDLK_SPACE) {
+                    numberOfSpacePressed += 1;
+                    // char fuck[50] = "/mnt/DataDisk/ascendOS/templates/basic.yml";
+                    printf("Parsing yaml file with space press number: %u\n", numberOfSpacePressed);
+                    render_managerDeleteScene();
+                    parse_yaml(hell);
+                }
                 if (event.key.keysym.sym == SDLK_RETURN) {
                     state = (state == STATE_LOGIN) ? STATE_HOME : STATE_LOGIN;
                 } else if (event.key.keysym.sym == SDLK_ESCAPE) {
@@ -123,14 +148,14 @@ int main(const int argc, const char *argv[]) {
         
         frameStartTime = SDL_GetTicks64();
 
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Clear screen
-        SDL_RenderClear(renderer);
+        // SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Clear screen
+        // SDL_RenderClear(renderer);
         
-        if (state == STATE_LOGIN) {
-            SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255); // Red for login
-        } else if (state == STATE_HOME) {
-            SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255); // Green for home
-        } 
+        // if (state == STATE_LOGIN) {
+        //     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255); // Red for login
+        // } else if (state == STATE_HOME) {
+        //     SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255); // Green for home
+        // } 
         // else if (inTransition) {
         //     printf("-");
         //     isStillInTransition = transitionBackgroundColorNextFrame(renderer, transitionPtr);
@@ -140,50 +165,67 @@ int main(const int argc, const char *argv[]) {
         //     }
         // }
         
-        SDL_RenderFillRect(renderer, &backgroundColorBox);
+        // SDL_RenderFillRect(renderer, &backgroundColorBox);
 
-        // This is the RGB triangle
-        SDL_Surface *tempSurface = SDL_CreateRGBSurface(0, 100, 100, 32, 0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000);
-        SDL_Texture *tempTexture = SDL_CreateTextureFromSurface(renderer, tempSurface);
-        SDL_Vertex point1 = {{10, 10}, {255, 0, 0, 255}, {0, 0}};
-        SDL_Vertex point2 = {{100, 0}, {0, 255, 0, 255}, {0, 0}};
-        SDL_Vertex point3 = {{100, 100}, {0, 0, 255, 255}, {0, 0}};
-        SDL_Vertex point4 = {{200, 150}, {255, 255, 255, 255}, {0, 0}};
-        SDL_Vertex tempVertex[] = { point1, point2, point3, point1, point4, point2 };
-        SDL_RenderGeometry(renderer, NULL, tempVertex, 3, NULL, 0);
+        // // This is the RGB triangle
+        // SDL_Surface *tempSurface = SDL_CreateRGBSurface(0, 100, 100, 32, 0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000);
+        // SDL_Texture *tempTexture = SDL_CreateTextureFromSurface(renderer, tempSurface);
+        // SDL_Vertex point1 = {{10, 10}, {255, 0, 0, 255}, {0, 0}};
+        // SDL_Vertex point2 = {{100, 0}, {0, 255, 0, 255}, {0, 0}};
+        // SDL_Vertex point3 = {{100, 100}, {0, 0, 255, 255}, {0, 0}};
+        // SDL_Vertex point4 = {{200, 150}, {255, 255, 255, 255}, {0, 0}};
+        // SDL_Vertex tempVertex[] = { point1, point2, point3, point1, point4, point2 };
+        // SDL_RenderGeometry(renderer, NULL, tempVertex, 3, NULL, 0);
         
-        SDL_FreeSurface(tempSurface);
-        SDL_DestroyTexture(tempTexture);
+        // SDL_FreeSurface(tempSurface);
+        // SDL_DestroyTexture(tempTexture);
 
-        SDL_Color tempColor = {255, 255, 255, 255};
-        drawCircleAtCoord(renderer, 100, 100, 100, 100, tempColor);
-        drawCircleAtCoord(renderer, 300, 300, 50, 100, tempColor);
+        // SDL_Color tempColor = {255, 255, 255, 255};
+        // drawCircleAtCoord(renderer, 100, 100, 100, 100, tempColor);
+        // drawCircleAtCoord(renderer, 300, 300, 50, 100, tempColor);
         
         
-        SDL_Rect tempRect = {100, 100, 200, 200};
-        selectFontFromList("Roboto-Regular", 100);
-        renderTextAtCoord(renderer, "Hello world!", 100, 100, &SDLGreenColor, true, &tempRect);
-        selectFontFromList("BebasNeue-Regular", 50);
-        renderTextAtCoord(renderer, "Hello world!", 100, 100, &SDLGreenColor, false, NULL);
-        selectFontFromList("DancingScript-Regular", 200);
-        renderTextAtCoord(renderer, "world!", 500, 100, &SDLBlueColor, false, NULL);
-        selectFontFromList("CascadiaMono-Regular", 100);
-        renderTextAtCoord(renderer, currentFPS, FPSLocation.x, FPSLocation.y, &SDLBlueColor, false, NULL);
+        // SDL_Rect tempRect = {100, 100, 200, 200};
+        // selectFontFromList("Roboto-Regular", 100);
+        // renderTextAtCoord(renderer, "Hello world!", 100, 100, &SDLGreenColor, true, &tempRect);
+        // selectFontFromList("BebasNeue-Regular", 50);
+        // renderTextAtCoord(renderer, "Hello world!", 100, 100, &SDLGreenColor, false, NULL);
+        // selectFontFromList("DancingScript-Regular", 200);
+        // renderTextAtCoord(renderer, "world!", 500, 100, &SDLBlueColor, false, NULL);
+        // selectFontFromList("CascadiaMono-Regular", 100);
+        
+        
 
+        // char ccd[500];
+        // if (getcwd(ccd, sizeof(ccd)) == NULL) {
+        //     perror("getcwd() error");
+        // } else {
+        //     char imagePath[550];
+        //     sprintf(imagePath, "%s/static/img/orange.jpg", ccd);
+        //     renderImage(renderer, imagePath, 100, 100);
+        // }
+        
+        // drawSquareAtCoord(renderer, 50, 50, 50, SDLGreenColor);
+        // drawRectAtCoord(renderer, 100, 100, 150, 30, SDLBlueColor);
+        // drawCircleAtCoord(renderer, 0, 0, 50, 100, SDLBlueColor);
 
-
-        char ccd[500];
-        if (getcwd(ccd, sizeof(ccd)) == NULL) {
-            perror("getcwd() error");
-        } else {
-            char imagePath[550];
-            sprintf(imagePath, "%s/static/img/orange.jpg", ccd);
-            renderImage(renderer, imagePath, 100, 100);
-        }
-
-        drawSquareAtCoord(renderer, 50, 50, 50, SDLGreenColor);
-        drawRectAtCoord(renderer, 100, 100, 150, 30, SDLBlueColor);
-        drawCircleAtCoord(renderer, 0, 0, 50, 100, SDLBlueColor);
+        // printf("Hi\n");
+        // selectFontFromList("Roboto-Regular", 10);
+        // SDL_Texture *fpsTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_TARGET, 200, 200);
+        // SDL_SetRenderTarget(renderer, fpsTexture);
+        // printf("Hi2\n");
+        // renderTextAtCoord(renderer, currentFPS, 0, 0, &SDLBlueColor, false, NULL);
+        // printf("Hi3\n");
+        // SDL_SetRenderTarget(renderer, NULL);
+        // printf("Hi4\n");
+        
+        // unsigned int idToRemove = render_managerAddItemToDraw(2, 10, fpsTexture, NULL, 0, 0, 200, 200);
+        // printf("Hi5\n");
+        // printf("%u\n", idToRemove);
+        
+        render_managerDrawScene();
+        // signed int renderResult = render_managerRemoveItem(2, idToRemove);
+        // printf("%d\n", renderResult);
  
         SDL_RenderPresent(renderer);
         frameTime = SDL_GetTicks() - frameStartTime;

@@ -1,0 +1,7 @@
+# Example YAML document
+person: &person1
+  name: "Alice"
+  age: 30
+hobbies:
+  - reading
+  - gaming

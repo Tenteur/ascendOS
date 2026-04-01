@@ -5,8 +5,14 @@
  * This code aims to translate a .jsonUI file to actual rendering by using images, text and all available means.
  */
 
+ #include <SDL2/SDL.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <fcntl.h>
+#include <yaml.h>
+#include <stdlib.h>
 #include <SDL2/SDL.h>
-#include "../include/cJSON.h"
+// #include "../include/cJSON.h"
 
 /**
  * @brief Init the variables and functions needed for the code to work.
@@ -21,6 +27,11 @@ int interface_handlerQuit();
  * @brief Will load a scene from a file contained in the templates directory
  * @param sceneName The name of the file where the scene is to be loader (as a .jsonUI)
  */
-xmlDoc *interface_handlerLoadScene(char sceneName[15]);
+int interface_handlerLoadScene(const char *filename);
 
-signed int interface_handlerGenerateScene(xmlDoc *document);
+int parse_yaml(const char *filename);
+
+int parse_rect(yaml_parser_t parser, yaml_event_t event);
+unsigned int conv(const yaml_char_t *value);
+
+int interface_handlerGenerateScene();

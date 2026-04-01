@@ -1,10 +1,9 @@
 var searchData=
 [
-  ['text_2ec_0',['text.c',['../text_8c.html',1,'']]],
-  ['text_2eh_1',['text.h',['../text_8h.html',1,'']]],
-  ['textinit_2',['textInit',['../text_8c.html#a9e34a05d4631e144068407859be3bb8e',1,'textInit():&#160;text.c'],['../text_8h.html#a9e34a05d4631e144068407859be3bb8e',1,'textInit():&#160;text.c']]],
-  ['todo_20list_3',['Todo List',['../todo.html',1,'']]],
-  ['transitionbackgroundcolorinit_4',['transitionBackgroundColorInit',['../utils_8c.html#a00e6f397932627ddb3e5dd071f652c5b',1,'transitionBackgroundColorInit(SDL_Color *startingColor, SDL_Color *endingColor, const int transitionNumberFrames):&#160;utils.c'],['../utils_8h.html#a00e6f397932627ddb3e5dd071f652c5b',1,'transitionBackgroundColorInit(SDL_Color *startingColor, SDL_Color *endingColor, const int transitionNumberFrames):&#160;utils.c']]],
-  ['transitionbackgroundcolornextframe_5',['transitionBackgroundColorNextFrame',['../utils_8c.html#ae6ad3a70834dd8658c8f5a5e7546962a',1,'transitionBackgroundColorNextFrame(SDL_Renderer *renderer, transitionProperties *transitionPropertiesItem):&#160;utils.c'],['../utils_8h.html#ae6ad3a70834dd8658c8f5a5e7546962a',1,'transitionBackgroundColorNextFrame(SDL_Renderer *renderer, transitionProperties *transitionPropertiesItem):&#160;utils.c']]],
-  ['transitionproperties_6',['transitionProperties',['../structtransitionProperties.html',1,'transitionProperties'],['../utils_8h.html#a059bbfcf970b575b99fcc9da1783aeaf',1,'transitionProperties:&#160;utils.h']]]
+  ['name_0',['name',['../cJSON_8h.html#a25d22ecc7e656d2c59332072684e8766',1,'cJSON.h']]],
+  ['nan_1',['NAN',['../cJSON_8c.html#a8abfcc76130f3f991d124dd22d7e69bc',1,'cJSON.c']]],
+  ['newitem_2',['newitem',['../cJSON_8h.html#abd13e53985a93dee588f840f06aac973',1,'cJSON.h']]],
+  ['next_3',['next',['../structcJSON.html#ade862b880379b5e2a591f7326401fa8d',1,'cJSON::next'],['../structitemDataNode.html#a30093608530ddcb668a0304a51a55474',1,'itemDataNode::next'],['../structfontListStruct.html#a902f07b08934cf79f29fe051a2075cb1',1,'fontListStruct::next']]],
+  ['noalloc_4',['noalloc',['../structprintbuffer.html#aa2a7966b71dc3535e4e3789c33ec5368',1,'printbuffer']]],
+  ['number_5',['number',['../cJSON_8h.html#a01b4671c6b7cc8f831c951c000a37735',1,'cJSON.h']]]
 ];
