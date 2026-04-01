@@ -30,9 +30,9 @@ int main() {
 
     newFile = fopen(newFilename, "w");
 
-    while ((ch = fgetc(file)) != EOF) {
+    while ((ch = fgetc(file)) != EOF) { // @todo: modify so it removes the empty lines.
         if (!ignoreNextChar) { // This is the second slash from the start of the comment
-            if (ch == '"') isInQuote = isInQuote ^ 0b1;
+            if (ch == '"') isInQuote = isInQuote ^ 0b1; // OR isInQuote
 
             else { // This is not a quote so can be a comment
                 if (ch == '/' && !isInQuote) {

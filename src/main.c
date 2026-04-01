@@ -28,17 +28,14 @@ SDL_Color SDLRedColor = {255, 0, 0, 255};
 SDL_Color SDLGreenColor = {0, 255, 0, 255};
 SDL_Color SDLBlueColor = {0, 0, 255, 255};
 
-bool isUsingVsync = true; // ! Not really used. // TODO: Will be modified
-
 int main(const int argc, const char *argv[]) {
 
     // * INITIALIZING all the variables that are going to be used.
     // ! // FIXME: Maybe clean this area, some variables may be unused.
-    int circlePrecision = 100; // ? // TODO: Move this variable
+
     long frameStartTime, frameTime; // ? // TODO: Move these variables
     double fps; // ? // TODO: Remove or move these variables
     char currentFPS[3] = "";
-    // int roundedFps = 0; // ! // TODO: Remove this variable
     
     SDL_Rect FPSLocation = {650, 0, 150, 200}; // ? // TODO: Move or remove this variable
     SDL_Rect backgroundColorBox = { 200, 150, 400, 300 }; // ? // TODO: Move or remove this variable
@@ -53,16 +50,9 @@ int main(const int argc, const char *argv[]) {
         return 1;
     }
 
-    // interface_handlerInit();
-    printf("Before\n");
-    // interface_handlerLoadScene("example.jsonUI");
-    printf("After\n");
-
     // * Variables definition finished. Initialization of SDL2
     
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER);
-    // TTF_Init();
-    // utilsInit();
     
     struct SDL_DisplayMode screenInfo;
     SDL_GetCurrentDisplayMode(0, &screenInfo);
@@ -74,22 +64,17 @@ int main(const int argc, const char *argv[]) {
     textInit();
     imagesInit();
     render_managerInit(renderer);
-
-    printf("%s\n", SDL_GetPixelFormatName(SDL_GetWindowPixelFormat(window)));
+    interface_handlerInit();
     
     bool running = true;
     AppState state = STATE_LOGIN;
     
     // * SDL2 Initilialized, program running
 
-    signed int success = addFontToList("Roboto-Regular", 10);
-    printf("%u\n", success);
-    success = addFontToList("BebasNeue-Regular", 50);
-    printf("%u\n", success);
-    success = addFontToList("CascadiaMono-Regular", 100);
-    printf("%u\n", success);
-    success = addFontToList("DancingScript-Regular", 200);
-    printf("%u\n", success);
+    addFontToList("Roboto-Regular", 10);
+    addFontToList("BebasNeue-Regular", 50);
+    addFontToList("CascadiaMono-Regular", 100);
+    addFontToList("DancingScript-Regular", 200);
     // ! // TODO: Clean this mess, maybe create a function to remember each input and reactions.
     while (running) {
         SDL_Event event;
@@ -108,26 +93,13 @@ int main(const int argc, const char *argv[]) {
                         whatToMove = &FPSLocation;
                     }
                 } else if (event.key.keysym.sym == SDLK_m) {
-                    printf("Funtion removed :'(\n");
-                    // inTransition = !inTransition;
-                    // if (inTransition) {
-                    //     printf("Currently in transition\n");
-                    //     transitionPtr = transitionBackgroundColorInit(&SDLRedColor, &SDLBlueColor, 240);
-                    // } else { printf("Currently NOT in transition\n"); }
-                } else if(event.key.keysym.sym == SDLK_v && false) {
-                    SDL_DestroyRenderer(renderer);
-                    isUsingVsync = !isUsingVsync;
-                    if (isUsingVsync) {
-                        printf("Using Vsync\n");
-                        renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-                    } else {
-                        printf("NOT using Vsync\n");
-                        renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-                    }
+                    printf("Transition function has been removed since it is deprecated and do not work\n");
+                } else if(event.key.keysym.sym == SDLK_v) {
+                    printf("Removed ability to disable VSync\n");
                 } else if (event.key.keysym.sym == SDLK_o) {
-                    circlePrecision += 1;
+                    printf("Modifying circle precision has been removed\n");
                 } else if (event.key.keysym.sym == SDLK_l) {
-                    circlePrecision -= 1;
+                    printf("Modifying circle precision has been removed\n");
                 }
                 else if (event.key.keysym.sym == SDLK_LEFT) {
                     whatToMove->x -= 1;
@@ -184,8 +156,8 @@ int main(const int argc, const char *argv[]) {
         SDL_DestroyTexture(tempTexture);
 
         SDL_Color tempColor = {255, 255, 255, 255};
-        drawCircleAtCoord(renderer, 100, 100, 100, circlePrecision, tempColor);
-        drawCircleAtCoord(renderer, 300, 300, 50, circlePrecision, tempColor);
+        drawCircleAtCoord(renderer, 100, 100, 100, 100, tempColor);
+        drawCircleAtCoord(renderer, 300, 300, 50, 100, tempColor);
         
         
         SDL_Rect tempRect = {100, 100, 200, 200};
@@ -201,46 +173,26 @@ int main(const int argc, const char *argv[]) {
 
 
         char ccd[500];
-        if (getcwd(ccd, sizeof(ccd)) != NULL) {
-            printf("Current working dir: %s\n", ccd);
-        } else {
+        if (getcwd(ccd, sizeof(ccd)) == NULL) {
             perror("getcwd() error");
-            return 1;
+        } else {
+            char imagePath[550];
+            sprintf(imagePath, "%s/static/img/orange.jpg", ccd);
+            renderImage(renderer, imagePath, 100, 100);
         }
-        char imagePath[550];
-        sprintf(imagePath, "%s/static/img/orange.jpg", ccd);
-        printf("%s should be concatenated; %s\n", ccd, imagePath);
-        renderImage(renderer, imagePath, 100, 100);
 
         drawSquareAtCoord(renderer, 50, 50, 50, SDLGreenColor);
         drawRectAtCoord(renderer, 100, 100, 150, 30, SDLBlueColor);
+        drawCircleAtCoord(renderer, 0, 0, 50, 100, SDLBlueColor);
+ 
+        SDL_RenderPresent(renderer);
+        frameTime = SDL_GetTicks() - frameStartTime;
+        if (frameTime > 0) {
+            fps = 1000.0f / frameTime;
+            sprintf(currentFPS, "%u", (int)round(fps));
+        }
 
-        SDL_Texture *sdldldl = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_TARGET, 200, 200);
-        // SDL_SetRenderTarget(renderer, sdldldl);
-        SDL_Color color = {122, 152, 155, 0};
-        drawCircleAtCoord(renderer, 0, 0, 50, circlePrecision, color);
-        // SDL_SetRenderTarget(renderer, NULL);
-        
-    //     unsigned int hi = render_managerAddItemToDraw(2, 1, sdldldl, NULL, 0, 0, 200, 200);
-        
-    //     SDL_Texture *sdldldl2 = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_TARGET, 200, 200);
-    //     SDL_SetRenderTarget(renderer, sdldldl2);
-    //     SDL_Color color2 = {2, 102, 255, 0};
-    //     drawCircleAtCoord(renderer, 0, 0, 50, circlePrecision, color2);
-    //     SDL_SetRenderTarget(renderer, NULL);
-        
-    //     unsigned int hi2 = render_managerAddItemToDraw(2, 1, sdldldl2, NULL, 300, 300, 200, 200);
-        
-    //     render_managerDrawScene();
-    //     render_managerRemoveItem(2, hi, false);
-    //     render_managerRemoveItem(2, hi2, false);
-        
-    //     SDL_RenderPresent(renderer);
-    //     frameTime = SDL_GetTicks() - frameStartTime;
-    //     if (frameTime > 0) {
-    //         fps = 1000.0f / frameTime;
-    //         sprintf(currentFPS, "%u", (int)round(fps));
-    //     }
+   
     }
 
     // ? Clear (mostly) everything of the system
