@@ -4,9 +4,13 @@
  */
 
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
+#include <SDL3/SDL.h>
+#include <SDL3_ttf/SDL_ttf.h>
 #include "../include/text.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+
 #include "../include/render_manager.h"
 
 struct fontListStruct *allFontsListStart = NULL;
@@ -65,39 +69,43 @@ signed int selectFontFromList(char *fontName, int fontSize) {
     return 0;
 }
 
-SDL_Texture *generateTextTexture(SDL_Renderer *renderer, const char *text, const SDL_Color *textColor, unsigned int sizeX, unsigned int sizeY) {
+SDL_Texture *generateTextTexture(SDL_Renderer *renderer, const char *text, const SDL_FColor *textColor, unsigned int sizeX, unsigned int sizeY) {
     // SDL_Surface *textSurface = TTF_RenderText_Blended(currentFontInUse, text, *textColor);
     // SDL_Texture *textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
 
     // SDL_FreeSurface(textSurface);
     // return textTexture;
-    int w, h;
-    const int calcResult = TTF_SizeUTF8(currentFontInUse, text, &w, &h);
-    printf("result: %u, %u, %u\n", calcResult, w, h);
-    if (sizeX != 0) w = sizeX;
-    if (sizeY != 0) h = sizeY;
-    SDL_Texture *textTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_TARGET, w, h);
-    if (textTexture == NULL) SDL_LogCritical(1,"An error occurred while generating a text texture: %s\n", SDL_GetError());
-    SDL_Surface *textSurface = TTF_RenderText_Blended(currentFontInUse, text, *textColor);
-    SDL_Texture *tempTextTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
-    // SDL_Rect textRect;
-    // textRect.x = 0;
-    // textRect.y = 0;
-    // textRect.w = sizeX;
-    // textRect.h = sizeY;
-    // ? Normally this part of the code does what it should !
-    SDL_SetRenderTarget(renderer, textTexture);
-    SDL_RenderCopy(renderer, tempTextTexture, NULL, NULL);
-    SDL_SetRenderTarget(renderer, NULL);
-    SDL_DestroyTexture(tempTextTexture);
-    SDL_FreeSurface(textSurface);
-    printf("%p\n", textTexture);
-    return textTexture;
+
+    // TTF_TextEngine * TTF_CreateRendererTextEngine(SDL_Renderer *renderer);
+    //
+    // int w, h;
+    // const int calcResult = TTF_GetStringSize(currentFontInUse, text, 0, &w, &h);
+    // printf("result: %u, %u, %u\n", calcResult, w, h);
+    // if (sizeX != 0) w = sizeX;
+    // if (sizeY != 0) h = sizeY;
+    // SDL_Texture *textTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_XRGB8888, SDL_TEXTUREACCESS_TARGET, w, h);
+    // if (textTexture == NULL) SDL_LogCritical(1,"An error occurred while generating a text texture: %s\n", SDL_GetError());
+    // SDL_Surface *textSurface = TTF_RenderText_Blended(currentFontInUse, text, 0, *textColor);
+    // SDL_Texture *tempTextTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+    // // SDL_Rect textRect;
+    // // textRect.x = 0;
+    // // textRect.y = 0;
+    // // textRect.w = sizeX;
+    // // textRect.h = sizeY;
+    // // ? Normally this part of the code does what it should !
+    // SDL_SetRenderTarget(renderer, textTexture);
+    // SDL_RenderTexture(renderer, tempTextTexture, NULL, NULL);
+    // SDL_SetRenderTarget(renderer, NULL);
+    // SDL_DestroyTexture(tempTextTexture);
+    // SDL_DestroySurface(textSurface);
+    // printf("%p\n", textTexture);
+    // return textTexture;
+    return NULL;
 }
 
 // ? This function seems to work overall.
 // ! TODO: Clean this function
-// signed int renderTextAtCoord(SDL_Renderer *renderer, const char *text, const int x, const int y, SDL_Color *textColor, bool useCustomSize, SDL_Rect *customSizeRect) {
+// signed int renderTextAtCoord(SDL_Renderer *renderer, const char *text, const int x, const int y, SDL_FColor *textColor, bool useCustomSize, SDL_Rect *customSizeRect) {
 //     // SDL_Texture *textTexture = generateTextTexture(renderer, text, textColor);
 //     SDL_Rect rectSize;
 //     if (useCustomSize) {

@@ -10,9 +10,11 @@
 #include <stdint.h>
 #include <unistd.h>
 #include <stdbool.h>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
+#include <SDL3/SDL.h>
+#include <SDL3_ttf/SDL_ttf.h>
 #include "../include/utils.h"
+
+#include <stdlib.h>
 
 // ! // @TODO: Clean this file, this is a little mess
 
@@ -42,7 +44,7 @@ int utilsQuit() {
 
 
 
-transitionProperties *transitionBackgroundColorInit(SDL_Color *startingColor, SDL_Color *endingColor, const int transitionNumberFrames) {
+transitionProperties *transitionBackgroundColorInit(SDL_FColor *startingColor, SDL_FColor *endingColor, const int transitionNumberFrames) {
     transitionProperties backgroundTransition = {
         startingColor, 
         (endingColor->r - startingColor->r) / transitionNumberFrames,

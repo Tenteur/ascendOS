@@ -3,8 +3,12 @@
  * @brief This file manages the textures and surfaces to render on the screen
  */
 
-#include <SDL2/SDL.h>
+#include <SDL3/SDL.h>
 #include "../include/render_manager.h"
+
+#include <stdlib.h>
+#include <limits.h>
+#include <stdio.h>
 
 SDL_Renderer *globalRenderer = NULL;
 static unsigned int nextItemIDAvailable = 0;
@@ -45,12 +49,12 @@ unsigned int render_managerAddItemToDraw(const unsigned int layer, const unsigne
     else if (layer == 2) { currentNodeCheck = foregroundItemDataNode; }
     unsigned int itemID = render_managerGetAvailableItemID(layer);
     while(true) {
-        if (currentNodeCheck->next == NULL) {
+        if (currentNodeCheck->next == NULL) { // Always true when the ItemDataNode is empty (first node doesn't use any data other than '*next')
             break;
-        } else if (currentNodeCheck->subLayer > subLayer) {
+        } else if (currentNodeCheck->next->subLayer > subLayer) {
             break;
-        } else if (currentNodeCheck->subLayer == subLayer && currentNodeCheck->itemID < itemID && currentNodeCheck->next->itemID > itemID) {
-            break;
+        } else {
+            currentNodeCheck = currentNodeCheck->next;
         }
     } // Out of the loop: got the node where to add this
     itemDataNode *newItemDataNode = malloc(sizeof(itemDataNode));
@@ -68,7 +72,7 @@ unsigned int render_managerAddItemToDraw(const unsigned int layer, const unsigne
 }
 
 signed int render_managerDrawScene() {
-    SDL_Rect currentRect;
+    SDL_FRect currentRect;
     itemDataNode *currentItemDataNode = NULL;
     unsigned int currentLayerDrawn;
     
@@ -97,9 +101,9 @@ signed int render_managerDrawScene() {
         currentRect.h = currentItemDataNode->height;
         if (currentItemDataNode->texturePtr == NULL) {
             SDL_Texture *texturePtr = SDL_CreateTextureFromSurface(globalRenderer, currentItemDataNode->surfacePtr);
-            SDL_RenderCopy(globalRenderer, texturePtr, NULL, &currentRect);
+            SDL_RenderTexture(globalRenderer, texturePtr, NULL, &currentRect);
         } else {
-            SDL_RenderCopy(globalRenderer, currentItemDataNode->texturePtr, NULL, &currentRect);
+            SDL_RenderTexture(globalRenderer, currentItemDataNode->texturePtr, NULL, &currentRect);
         }
         if (currentItemDataNode->next == NULL) {
             currentLayerDrawn += 1;
@@ -124,7 +128,7 @@ signed int render_managerRemoveItem(unsigned int layer, unsigned int itemID) {
     while(true) {
         if (currentItemDataNode->itemID == itemID) {
             if (currentItemDataNode->texturePtr != NULL) SDL_DestroyTexture(currentItemDataNode->texturePtr);
-            else SDL_FreeSurface(currentItemDataNode->surfacePtr);
+            else SDL_DestroySurface(currentItemDataNode->surfacePtr);
             // Cleaned the texture/surface from memory. Need to move the header
             // if (currentItemDataNode == backgroundItemDataNode) { // @todo: Remove this condition because the item to remove cannot be the head of the NODE
             //     backgroundItemDataNode = currentItemDataNode->next;
@@ -142,12 +146,12 @@ signed int render_managerRemoveItem(unsigned int layer, unsigned int itemID) {
     }
 }
 
-signed int render_managerFuseTextures(SDL_Renderer *renderer, SDL_Texture *outputTexture, SDL_Texture *firstInputTexture, SDL_Texture *secondInputTexture, SDL_Rect *firstInputCoord, SDL_Rect *secondInputCoord, SDL_Rect *firstInputSRect, SDL_Rect *secondInputSRect) {
+signed int render_managerFuseTextures(SDL_Renderer *renderer, SDL_Texture *outputTexture, SDL_Texture *firstInputTexture, SDL_Texture *secondInputTexture, SDL_FRect *firstInputCoord, SDL_FRect *secondInputCoord, SDL_FRect *firstInputSRect, SDL_FRect *secondInputSRect) {
     signed int hasError = 0b0;
     hasError = hasError | SDL_SetRenderTarget(renderer, outputTexture);
     if (hasError != 0) return -1;
-    hasError = hasError | SDL_RenderCopy(renderer, firstInputTexture, firstInputSRect, firstInputCoord);
-    hasError = hasError | SDL_RenderCopy(renderer, secondInputTexture, secondInputSRect, secondInputCoord);
+    hasError = hasError | SDL_RenderTexture(renderer, firstInputTexture, firstInputSRect, firstInputCoord);
+    hasError = hasError | SDL_RenderTexture(renderer, secondInputTexture, secondInputSRect, secondInputCoord);
     if (hasError != 0) {
         printf("had an error during texture fusion\n");
         return -1;
@@ -163,7 +167,7 @@ signed int render_managerDeleteScene() {
         register SDL_Texture *textureToDestroy = itemDataNodeToClear->texturePtr;
         register SDL_Surface *surfaceToDestroy = itemDataNodeToClear->surfacePtr;
         if(textureToDestroy) SDL_DestroyTexture(textureToDestroy);
-        else if (surfaceToDestroy) SDL_FreeSurface(itemDataNodeToClear->surfacePtr);
+        else if (surfaceToDestroy) SDL_DestroySurface(itemDataNodeToClear->surfacePtr);
         register itemDataNode *nextDataNode = itemDataNodeToClear->next;
         free(itemDataNodeToClear);
         itemDataNodeToClear = nextDataNode;
@@ -175,7 +179,7 @@ signed int render_managerDeleteScene() {
         register SDL_Texture *textureToDestroy = itemDataNodeToClear->texturePtr;
         register SDL_Surface *surfaceToDestroy = itemDataNodeToClear->surfacePtr;
         if(textureToDestroy) SDL_DestroyTexture(textureToDestroy);
-        else if (surfaceToDestroy) SDL_FreeSurface(itemDataNodeToClear->surfacePtr);
+        else if (surfaceToDestroy) SDL_DestroySurface(itemDataNodeToClear->surfacePtr);
         register itemDataNode *nextDataNode = itemDataNodeToClear->next;
         free(itemDataNodeToClear);
         itemDataNodeToClear = nextDataNode;
@@ -187,7 +191,7 @@ signed int render_managerDeleteScene() {
         register SDL_Texture *textureToDestroy = itemDataNodeToClear->texturePtr;
         register SDL_Surface *surfaceToDestroy = itemDataNodeToClear->surfacePtr;
         if(textureToDestroy) SDL_DestroyTexture(textureToDestroy);
-        else if (surfaceToDestroy) SDL_FreeSurface(itemDataNodeToClear->surfacePtr);
+        else if (surfaceToDestroy) SDL_DestroySurface(itemDataNodeToClear->surfacePtr);
         register itemDataNode *nextDataNode = itemDataNodeToClear->next;
         free(itemDataNodeToClear);
         itemDataNodeToClear = nextDataNode;

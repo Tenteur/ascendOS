@@ -4,8 +4,8 @@
  */
 
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
+#include <SDL3/SDL.h>
+#include <SDL3_ttf/SDL_ttf.h>
 
 /**
  * @brief Should be used for the app to know if loged or not.
@@ -21,7 +21,7 @@ typedef enum AppState {
  * @note Will be repurposed
  */
 typedef struct transitionProperties {
-    SDL_Color *currentSDLColor;
+    SDL_FColor *currentSDLColor;
     double red;
     double green;
     double blue;
@@ -47,7 +47,7 @@ int utilsQuit();
 
 /// @brief Initialize the background transition. /!\ SHOULD NOT BE USED, glitchy and not versatile. Will be rewrote.
 /// @bug Will be rewritten-repurposed, not really working 
-transitionProperties *transitionBackgroundColorInit(SDL_Color *startingColor, SDL_Color *endingColor, const int transitionNumberFrames);
+transitionProperties *transitionBackgroundColorInit(SDL_FColor *startingColor, SDL_FColor *endingColor, const int transitionNumberFrames);
 /// @brief Render the background transition frame. /!\ SHOULD NOT BE USED, glitchy and not versatile. Will be rewrote.
 /// @bug Will be rewritten-repurposed, not really working 
 bool transitionBackgroundColorNextFrame(SDL_Renderer *renderer, transitionProperties *transitionPropertiesItem);
