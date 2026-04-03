@@ -33,7 +33,7 @@ typedef struct fontListStruct {
  * @param useCustomSize should use the customSize ?
  * @return 0 if success, -1 if failure
  */
-signed int renderTextAtCoord(SDL_Renderer *renderer, const char *text, const int x, const int y, SDL_FColor *textColor, bool useCustomSize, SDL_Rect *customSizeRect);
+signed int renderTextAtCoord(SDL_Renderer *renderer, const char *text, int x, int y, SDL_FColor *textColor, bool useCustomSize, SDL_Rect *customSizeRect);
 // Generate text texture and return it as a pointer
 SDL_Texture *generateTextTexture(SDL_Renderer *renderer, const char *text, const SDL_FColor *textColor, unsigned int sizeX, unsigned int sizeY);
 // Return a pointer of a font based on the name and size asked
@@ -44,7 +44,7 @@ SDL_Texture *generateTextTexture(SDL_Renderer *renderer, const char *text, const
  * @param fontSize the size of the font that should be added
  * @return 0 if success, -1 if failure
  */
-signed int addFontToList(char *fontName, int fontSize);
+signed int addFontToList(const char *fontName, int fontSize);
 /**
  * @brief Set the selected font
  * Set the selected font from the list of added fonts
@@ -52,5 +52,5 @@ signed int addFontToList(char *fontName, int fontSize);
  * @param fontSize the size of the font that should be selected
  * @return 0 if success, -1 if failure
  */
-signed int selectFontFromList(char *fontName, int fontSize);
-signed int removeFontFromList(char fontName, int fontSize);
+signed int selectFontFromList(const char *fontName, int fontSize);
+signed int removeFontFromList(const char *fontName, int fontSize);

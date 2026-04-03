@@ -13,23 +13,24 @@
 
 #include "../include/render_manager.h"
 
-struct fontListStruct *allFontsListStart = NULL;
-/// Store the pointer of the current font in use
-TTF_Font *currentFontInUse = NULL;
+fontListStruct *allFontsListStart = nullptr;
+TTF_Font *currentFontInUse = nullptr;
 
+// TODO: Verify if it was well initialized.
 signed int textInit() {
     TTF_Init();
     allFontsListStart = malloc(sizeof(fontListStruct));
     strcpy(allFontsListStart->fontName, "Roboto-Regular");
-    allFontsListStart->fontSize = 100;
-    allFontsListStart->fontPtr = TTF_OpenFont("/usr/share/fonts/TTF/Roboto-Regular.ttf", 100);
-    allFontsListStart->next = NULL;
+    allFontsListStart->fontSize = 40;
+    allFontsListStart->fontPtr = TTF_OpenFont("/usr/share/fonts/TTF/Roboto-Regular.ttf", 40);
+    allFontsListStart->next = nullptr;
     currentFontInUse = allFontsListStart->fontPtr;
     printf("text Initialized\n");
     return 0;
 }
 
-signed int addFontToList(char *fontName, int fontSize) { // @todo: modify so it adds the font to the very beginning (gain some perf)
+// TODO: Modify so it adds the font at the beginning.
+signed int addFontToList(const char *fontName, int fontSize) {
     if (strcmp(fontName, "default") == 0) {
         currentFontInUse = allFontsListStart->fontPtr;
         return 0;
@@ -45,19 +46,26 @@ signed int addFontToList(char *fontName, int fontSize) { // @todo: modify so it 
         }
     } // out of the loop: Found the last font of the list
 
-    struct fontListStruct *newFontPtr = malloc(sizeof(fontListStruct));
+    fontListStruct *newFontPtr = malloc(sizeof(fontListStruct));
     strcpy(newFontPtr->fontName, fontName);
     newFontPtr->fontSize = fontSize;
     char fontPath[250];
     sprintf(fontPath, "/usr/share/fonts/TTF/%s.ttf", fontName);
-    newFontPtr->fontPtr = TTF_OpenFont(fontPath, fontSize);
-    newFontPtr->next = NULL;
+    newFontPtr->fontPtr = TTF_OpenFont(fontPath, (float)fontSize);
+    if (newFontPtr->fontPtr == NULL) SDL_LogCritical(1, "Error while loading font: '%s'", SDL_GetError());
+    newFontPtr->next = nullptr;
     currentFont->next = newFontPtr;
     // Font added at end of list
     return 0;
 }
-signed int selectFontFromList(char *fontName, int fontSize) {
-    struct fontListStruct *currentFont = allFontsListStart;
+
+// TODO: Write this function (boring).
+signed int removeFontFromList(const char *fontName, int fontSize) {
+    return 0;
+}
+
+signed int selectFontFromList(const char *fontName, int fontSize) {
+    fontListStruct *currentFont = allFontsListStart;
     while (true) {
         if (currentFont->fontSize == fontSize && strcmp(currentFont->fontName, fontName) == 0 ) break; 
         else if (currentFont->next == NULL) return -1;
@@ -69,42 +77,28 @@ signed int selectFontFromList(char *fontName, int fontSize) {
     return 0;
 }
 
+// TODO: This function can be cleaned i think.
 SDL_Texture *generateTextTexture(SDL_Renderer *renderer, const char *text, const SDL_FColor *textColor, unsigned int sizeX, unsigned int sizeY) {
-    // SDL_Surface *textSurface = TTF_RenderText_Blended(currentFontInUse, text, *textColor);
-    // SDL_Texture *textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
 
-    // SDL_FreeSurface(textSurface);
-    // return textTexture;
-
-    // TTF_TextEngine * TTF_CreateRendererTextEngine(SDL_Renderer *renderer);
-    //
-    // int w, h;
-    // const int calcResult = TTF_GetStringSize(currentFontInUse, text, 0, &w, &h);
-    // printf("result: %u, %u, %u\n", calcResult, w, h);
-    // if (sizeX != 0) w = sizeX;
-    // if (sizeY != 0) h = sizeY;
-    // SDL_Texture *textTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_XRGB8888, SDL_TEXTUREACCESS_TARGET, w, h);
-    // if (textTexture == NULL) SDL_LogCritical(1,"An error occurred while generating a text texture: %s\n", SDL_GetError());
-    // SDL_Surface *textSurface = TTF_RenderText_Blended(currentFontInUse, text, 0, *textColor);
-    // SDL_Texture *tempTextTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
-    // // SDL_Rect textRect;
-    // // textRect.x = 0;
-    // // textRect.y = 0;
-    // // textRect.w = sizeX;
-    // // textRect.h = sizeY;
-    // // ? Normally this part of the code does what it should !
-    // SDL_SetRenderTarget(renderer, textTexture);
-    // SDL_RenderTexture(renderer, tempTextTexture, NULL, NULL);
-    // SDL_SetRenderTarget(renderer, NULL);
-    // SDL_DestroyTexture(tempTextTexture);
-    // SDL_DestroySurface(textSurface);
-    // printf("%p\n", textTexture);
-    // return textTexture;
-    return NULL;
+    TTF_TextEngine *textEngine = TTF_CreateRendererTextEngine(renderer);
+    TTF_Text *textText = TTF_CreateText(textEngine, currentFontInUse, text, 0);
+    if (textText == NULL) SDL_LogCritical(1,"An error occurred while generating the text: %s\n", SDL_GetError());
+    int w, h;
+    TTF_GetTextSize(textText, &w, &h);
+    if (sizeX != 0) w = sizeX;
+    if (sizeY != 0) h = sizeY;
+    TTF_SetTextColor(textText, textColor->r, textColor->g, textColor->b, textColor->a);
+    SDL_Texture *textTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, w, h);
+    SDL_SetRenderTarget(renderer, textTexture);
+    bool resu = TTF_DrawRendererText(textText, sizeX, sizeY);
+    if (resu == 0) SDL_LogCritical(1,"An error occurred while rendering the text: %s\n", SDL_GetError());
+    SDL_SetRenderTarget(renderer, nullptr);
+    TTF_DestroyRendererTextEngine(textEngine);
+    TTF_DestroyText(textText);
+    return textTexture;
 }
 
-// ? This function seems to work overall.
-// ! TODO: Clean this function
+// TODO: Remove this function, it is useless.
 // signed int renderTextAtCoord(SDL_Renderer *renderer, const char *text, const int x, const int y, SDL_FColor *textColor, bool useCustomSize, SDL_Rect *customSizeRect) {
 //     // SDL_Texture *textTexture = generateTextTexture(renderer, text, textColor);
 //     SDL_Rect rectSize;

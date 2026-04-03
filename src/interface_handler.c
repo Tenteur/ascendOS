@@ -143,7 +143,7 @@ int parse_rect(yaml_parser_t parser, yaml_event_t event) {
             yaml_parser_parse(&parser, &event); // Needed, else it SegFault
         }
     }
-    SDL_Texture *rectTexture = SDL_CreateTexture(interfaceRenderer, SDL_PIXELFORMAT_XRGB8888, SDL_TEXTUREACCESS_TARGET, sizeX, sizeY);
+    SDL_Texture *rectTexture = SDL_CreateTexture(interfaceRenderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, sizeX, sizeY);
     SDL_SetRenderTarget(interfaceRenderer, rectTexture);
     SDL_FColor rectColor = {colorR, colorG, colorB, 255};
     signed int result = drawRectAtCoord(interfaceRenderer, 0, 0, sizeX, sizeY, rectColor);

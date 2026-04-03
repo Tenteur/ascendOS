@@ -10,29 +10,28 @@
 #include <limits.h>
 #include <stdio.h>
 
-SDL_Renderer *globalRenderer = NULL;
+SDL_Renderer *globalRenderer = nullptr;
 static unsigned int nextItemIDAvailable = 0;
-struct itemDataNode *backgroundItemDataNode = NULL;
-struct itemDataNode *middlegroundItemDataNode = NULL;
-struct itemDataNode *foregroundItemDataNode = NULL;
+struct itemDataNode *backgroundItemDataNode = nullptr;
+struct itemDataNode *middlegroundItemDataNode = nullptr;
+struct itemDataNode *foregroundItemDataNode = nullptr;
 // @note These three are the heads of the nodes. They contain no data except for *next
 
 signed int render_managerInit(SDL_Renderer *renderer) {
     // @todo: Init other components, might even init the SDL_Renderer but will be done after
     // nextItemIDAvailable = malloc(sizeof(int));
     nextItemIDAvailable = 1;
-    globalRenderer = malloc(sizeof(renderer));
     globalRenderer = renderer;
     backgroundItemDataNode = malloc(sizeof(itemDataNode));
-    backgroundItemDataNode->next = NULL; // The first textureDataNode will contain no data, used only as the head of the node.
+    backgroundItemDataNode->next = nullptr; // The first textureDataNode will contain no data, used only as the head of the node.
     middlegroundItemDataNode = malloc(sizeof(itemDataNode));
-    middlegroundItemDataNode->next = NULL; // The first textureDataNode will contain no data, used only as the head of the node.
+    middlegroundItemDataNode->next = nullptr; // The first textureDataNode will contain no data, used only as the head of the node.
     foregroundItemDataNode = malloc(sizeof(itemDataNode));
-    foregroundItemDataNode->next = NULL; // The first textureDataNode will contain no data, used only as the head of the node.
+    foregroundItemDataNode->next = nullptr; // The first textureDataNode will contain no data, used only as the head of the node.
     return 0;
 }
 
-static unsigned int render_managerGetAvailableItemID(int layer) {
+static unsigned int render_managerGetAvailableItemID(unsigned int layer) {
     unsigned int IDToReturn = nextItemIDAvailable;
     nextItemIDAvailable += 1;
     if (IDToReturn == INT_MAX) {
@@ -43,7 +42,7 @@ static unsigned int render_managerGetAvailableItemID(int layer) {
 }
 
 unsigned int render_managerAddItemToDraw(const unsigned int layer, const unsigned int subLayer, SDL_Texture *texturePtr, SDL_Surface *surfacePtr, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height) {
-    itemDataNode *currentNodeCheck = NULL;
+    itemDataNode *currentNodeCheck = nullptr;
     if (layer == 0) { currentNodeCheck = backgroundItemDataNode; }
     else if (layer == 1) { currentNodeCheck = middlegroundItemDataNode; }
     else if (layer == 2) { currentNodeCheck = foregroundItemDataNode; }
@@ -71,9 +70,10 @@ unsigned int render_managerAddItemToDraw(const unsigned int layer, const unsigne
     return itemID;
 }
 
+// TODO: If errors occured, return -1 (so of course, i need to check if errors occurred 😬)
 signed int render_managerDrawScene() {
     SDL_FRect currentRect;
-    itemDataNode *currentItemDataNode = NULL;
+    const itemDataNode *currentItemDataNode =  nullptr;
     unsigned int currentLayerDrawn;
     
     SDL_RenderClear(globalRenderer);
@@ -118,6 +118,7 @@ signed int render_managerDrawScene() {
     return 0;
 }
 
+// TODO: Also check if errors occurred and do some more checks.
 signed int render_managerRemoveItem(unsigned int layer, unsigned int itemID) {
     itemDataNode *currentItemDataNode = NULL;
     if (layer == 0) { currentItemDataNode = backgroundItemDataNode; }
@@ -146,6 +147,7 @@ signed int render_managerRemoveItem(unsigned int layer, unsigned int itemID) {
     }
 }
 
+// TODO: This function may not be needed.
 signed int render_managerFuseTextures(SDL_Renderer *renderer, SDL_Texture *outputTexture, SDL_Texture *firstInputTexture, SDL_Texture *secondInputTexture, SDL_FRect *firstInputCoord, SDL_FRect *secondInputCoord, SDL_FRect *firstInputSRect, SDL_FRect *secondInputSRect) {
     signed int hasError = 0b0;
     hasError = hasError | SDL_SetRenderTarget(renderer, outputTexture);
@@ -160,6 +162,7 @@ signed int render_managerFuseTextures(SDL_Renderer *renderer, SDL_Texture *outpu
     return hasError;
 }
 
+// TODO: Again, check if errors occurred...
 signed int render_managerDeleteScene() {
     register itemDataNode *itemDataNodeToClear = backgroundItemDataNode->next;
     while(1) {
@@ -202,11 +205,10 @@ signed int render_managerDeleteScene() {
     // render_managerInit(renderer);
     nextItemIDAvailable = 1;
     backgroundItemDataNode = malloc(sizeof(itemDataNode));
-    backgroundItemDataNode->next = NULL; // The first textureDataNode will contain no data, used only as the head of the node.
+    backgroundItemDataNode->next = nullptr; // The first textureDataNode will contain no data, used only as the head of the node.
     middlegroundItemDataNode = malloc(sizeof(itemDataNode));
-    middlegroundItemDataNode->next = NULL; // The first textureDataNode will contain no data, used only as the head of the node.
+    middlegroundItemDataNode->next = nullptr; // The first textureDataNode will contain no data, used only as the head of the node.
     foregroundItemDataNode = malloc(sizeof(itemDataNode));
-    foregroundItemDataNode->next = NULL; // The first textureDataNode will contain no data, used only as the head of the node.
+    foregroundItemDataNode->next = nullptr; // The first textureDataNode will contain no data, used only as the head of the node.
     return 0;
-    // @todo Detect when an error occurs and decide what to do.
 }

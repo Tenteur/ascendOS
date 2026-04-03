@@ -3,6 +3,8 @@
     ! // TODO: Clean the code and use a bit less the HEAP and a bit more the MALLOC function (for some variables, i don't know).
     ! // TODO: Rewrite completely the transition functions.
     ! // TODO: Remove all the useless comments (code, etc a)
+
+    // TODO: /!\ /!\ FIND THE MEMORY LEAK /!\ /!\
 */
 
 #include <time.h>
@@ -29,6 +31,9 @@
 SDL_FColor SDLRedColor = {255, 0, 0, 255};
 SDL_FColor SDLGreenColor = {0, 255, 0, 255};
 SDL_FColor SDLBlueColor = {0, 0, 255, 255};
+
+constexpr int WINDOWWIDTH = 800;
+constexpr int WINDOWHEIGHT = 600;
 
 int main(const int argc, const char *argv[]) {
 
@@ -60,7 +65,11 @@ int main(const int argc, const char *argv[]) {
     // SDL_GetCurrentDisplayMode(&screenInfo);
     // printf("%u, %u, %u\n", screenInfo.w, screenInfo.h, screenInfo.refresh_rate);
     
-    SDL_Window *window = SDL_CreateWindow("First UI", 800, 600, 0); // SDL_WINDOW_FULLSCREEN
+    SDL_Window *window = SDL_CreateWindow("First UI", WINDOWWIDTH, WINDOWHEIGHT, SDL_WINDOW_TRANSPARENT); // SDL_WINDOW_FULLSCREEN
+
+    // SDL_PropertiesID SDLProperties = SDL_CreateProperties();
+    // SDL_SetNumberProperty(SDLProperties, SDL_PROPERTY_RENDERER_CREATE_PIXEL_FORMAT_NUMBER, )
+
     SDL_Renderer *renderer = SDL_CreateRenderer(window, NULL);
 
     unsigned int hi = SDL_GetWindowPixelFormat(window);
@@ -80,15 +89,17 @@ int main(const int argc, const char *argv[]) {
     
     bool running = true;
     AppState state = STATE_LOGIN;
+
+
     
     // * SDL2 Initialized, program running
     
-    addFontToList("Roboto-Regular", 10);
-    signed int resultFont = addFontToList("comic", 100);
-    resultFont = resultFont | selectFontFromList("comic", 100);
-    printf("font: %i\n", resultFont);
+    // addFontToList("Roboto-Regular", 10);
+    // signed int resultFont = addFontToList("comic", 100);
     // addFontToList("BebasNeue-Regular", 50);
-    // addFontToList("CascadiaMono-Regular", 100);
+    addFontToList("consolai", 50);
+    signed int resultFont2 = selectFontFromList("consolai", 50);
+    printf("font: %i\n", resultFont2);
     // const char *hie = "hello!";
     // const char *hier = "oo";
     
@@ -240,10 +251,18 @@ int main(const int argc, const char *argv[]) {
         // unsigned int idToRemove = render_managerAddItemToDraw(2, 10, fpsTexture, NULL, 0, 0, 200, 200);
         // printf("Hi5\n");
         // printf("%u\n", idToRemove);
-        
+
+        // SDL_Texture *backgroundTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STATIC, WINDOWWIDTH, WINDOWHEIGHT);
+        // SDL_SetRenderDrawColor()
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+        SDL_RenderFillRect(renderer, nullptr);
+
         render_managerDrawScene();
         // signed int renderResult = render_managerRemoveItem(2, idToRemove);
         // printf("%d\n", renderResult);
+
+        // char *testss = "This shit 12";
+        // generateTextTexture(renderer, testss, &SDLRedColor, 0, 0);
  
         SDL_RenderPresent(renderer);
         frameTime = SDL_GetTicks() - frameStartTime;
