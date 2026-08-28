@@ -1,6 +1,6 @@
 # Compiler and flags
 CC      := gcc
-CFLAGS  := -Wall -Wextra -Iinclude \
+CFLAGS  := -Wall -Wextra -Iinclude -I/usr/lib64/gcc/x86_64-pc-linux-gnu/16.1.1/include/ \
             $(shell pkg-config --cflags sdl3) \
             $(shell pkg-config --cflags yaml-0.1)
 CFLAGS += -g -O0

@@ -1,53 +1,77 @@
-items:
-  # smile :)
+root:
+#  # smile :)
   - item:
     type: rect
     position: [0, 0]
-    size: [100, 100]
-    color: [255, 75, 10]
+    size: [50, 50]
+    color: [255, 75, 10, 255]
+    event:                                                             # When this section is commented
+      - eventType: onLeftClickDown                                     # When this section is commented
+        action: debugMsg,Hello world from debug message from the file! # When this section is commented
+
+#  - item:
+#    type: rect
+#    position: [100, 100]
+#    size: [50, 50]
+#    color: [100, 75, 255, 255]
+#    event:
+#      - eventType: onHoverDown
+#        action: debugMsg,This is a hover down.
+#    events:
+##      - eventName: onClick
+##        action: changeProperties
+##        properties:
+##          position: [200, 200]
+##          color: [255, 255, 255]
+#      - eventType: onLeftClickDown
+#        eventReaction: debugMessage
+#        debugMessage: "Clicked on button !"
 #  - item:
 #    type: rect
 #    position: [300, 0]
 #    size: [100, 100]
-#    color: [255, 255, 255]
+#    color: [255, 255, 255, 255]
 #  - item:
 #    type: rect
 #    position: [0, 200]
 #    size: [100, 100]
-#    color: [230, 223, 172]
+#    color: [230, 223, 172, 255]
 #  - item:
 #    type: rect
 #    position: [100, 300]
 #    size: [200, 100]
-#    color: [230, 223, 172]
+#    color: [230, 223, 172, 255]
 #  - item:
 #    type: rect
 #    position: [300, 200]
 #    size: [100, 100]
-#    color: [230, 223, 172]
+#    color: [230, 223, 172, 255]
 #  - item:
 #     type: text
 #     textContent: "Hello world!"
 #     position: [0, 0]
-#     fontSize: 20
+#     fontSize: 200
 #     fontFamily: default
-#     textColor: [255, 125, 0]
+#     color: [255, 125, 0, 255]
 #     size: auto
-  - item:
-    type: text
-    textContent: "hello"
-    position: [200, 200]
-    fontSize: 40
-    fontFamily: Roboto-Regular
-    textColor: [125, 0, 255]
-    size: auto
-  - item:
-    type: text
-    textContent: "world"
-    position: [100, 0]
-    fontSize: 50
-    fontFamily: consolai
-    textColor: [0, 125, 255]
-    size: auto
-# layer: 0
-# subLayer: 0
+#  - item:
+#    type: text
+#    textContent: "hello"
+#    position: [200, 200]
+#    fontSize: 40
+#    fontFamily: Roboto-Regular
+#    color: [125, 0, 255, 255]
+#    size: auto
+#  - item:
+#    type: text
+#    textContent: "world"
+#    position: [100, 0]
+#    fontSize: 50
+#    fontFamily: consolai
+#    color: [0, 125, 255, 255]
+#    size: auto
+#  - item:
+#    type: image
+#
+## layer: 0
+## subLayer: 0

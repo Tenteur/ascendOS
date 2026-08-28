@@ -70,7 +70,7 @@ unsigned int render_managerAddItemToDraw(const unsigned int layer, const unsigne
     return itemID;
 }
 
-// TODO: If errors occured, return -1 (so of course, i need to check if errors occurred 😬)
+// TODO: If errors occured, return -1 (so of course, i need to check if errors occurred)
 signed int render_managerDrawScene() {
     SDL_FRect currentRect;
     const itemDataNode *currentItemDataNode =  nullptr;

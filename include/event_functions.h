@@ -1,0 +1,8 @@
+//
+// Created by vianney on 08/07/2026.
+//
+
+#ifndef ASCENDOS_EVENT_FUNCTIONS_H
+#define ASCENDOS_EVENT_FUNCTIONS_H
+
+#endif //ASCENDOS_EVENT_FUNCTIONS_H
