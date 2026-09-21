@@ -1,0 +1,86 @@
+stream start event
+document start event
+Start of a mapping
+Scalar (root)
+sequence start event
+
+Start of a mapping
+Scalar (item)
+Scalar ()
+Scalar (type)
+Scalar (rect)
+Scalar (position)
+sequence start event
+Scalar (0)
+Scalar (0)
+sequence end event
+Scalar (size)
+sequence start event
+Scalar (100)
+Scalar (100)
+sequence end event
+Scalar (color)
+sequence start event
+Scalar (255)
+Scalar (75)
+Scalar (10)
+sequence end event
+mapping end event
+
+Start of a mapping
+Scalar (item)
+Scalar ()
+Scalar (type)
+Scalar (text)
+Scalar (textContent)
+Scalar (hello)
+Scalar (position)
+sequence start event
+Scalar (200)
+Scalar (200)
+sequence end event
+Scalar (fontSize)
+Scalar (40)
+Scalar (fontFamily)
+Scalar (Roboto-Regular)
+Scalar (textColor)
+sequence start event
+Scalar (125)
+Scalar (0)
+Scalar (255)
+sequence end event
+Scalar (size)
+Scalar (auto)
+mapping end event
+
+Start of a mapping
+Scalar (item)
+Scalar ()
+Scalar (type)
+Scalar (text)
+Scalar (textContent)
+Scalar (world)
+Scalar (position)
+sequence start event
+Scalar (100)
+Scalar (0)
+sequence end event
+Scalar (fontSize)
+Scalar (50)
+Scalar (fontFamily)
+Scalar (consolai)
+Scalar (textColor)
+sequence start event
+Scalar (0)
+Scalar (125)
+Scalar (255)
+sequence end event
+Scalar (size)
+Scalar (auto)
+mapping end event
+
+sequence end event
+mapping end event
+document end event
+stream end event
+finished it
