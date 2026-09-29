@@ -112,7 +112,7 @@ signed int drawRectAtCoord(SDL_Renderer *renderer, const int x, const int y, con
     vertexList[5].tex_coord.x = 0;
     vertexList[5].tex_coord.y = 0;
     
-    const int result = SDL_RenderGeometry(renderer, NULL, vertexList, 6, NULL, 0);
+    const int result = SDL_RenderGeometry(renderer, nullptr, vertexList, 6, NULL, 0);
     if (result != 0) {
         return -1;
     } else {

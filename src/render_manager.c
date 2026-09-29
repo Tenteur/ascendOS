@@ -10,28 +10,35 @@
 #include <limits.h>
 #include <stdio.h>
 
-SDL_Renderer *globalRenderer = nullptr;
+// @TODO Continue migrating to a unique tree instead of 3 separate trees !!!!!
+
+
+static SDL_Renderer *globalRenderer = nullptr;
 static unsigned int nextItemIDAvailable = 0;
-struct itemDataNode *backgroundItemDataNode = nullptr;
-struct itemDataNode *middlegroundItemDataNode = nullptr;
-struct itemDataNode *foregroundItemDataNode = nullptr;
-// @note These three are the heads of the nodes. They contain no data except for *next
+static struct treeRoot *UITreeRoot = nullptr;
 
 signed int render_managerInit(SDL_Renderer *renderer) {
-    // @todo: Init other components, might even init the SDL_Renderer but will be done after
-    // nextItemIDAvailable = malloc(sizeof(int));
+    // @TODO: Init other components, might even init the SDL_Renderer but will be done after
     nextItemIDAvailable = 1;
     globalRenderer = renderer;
-    backgroundItemDataNode = malloc(sizeof(itemDataNode));
-    backgroundItemDataNode->next = nullptr; // The first textureDataNode will contain no data, used only as the head of the node.
-    middlegroundItemDataNode = malloc(sizeof(itemDataNode));
-    middlegroundItemDataNode->next = nullptr; // The first textureDataNode will contain no data, used only as the head of the node.
-    foregroundItemDataNode = malloc(sizeof(itemDataNode));
-    foregroundItemDataNode->next = nullptr; // The first textureDataNode will contain no data, used only as the head of the node.
+    UITreeRoot = malloc(sizeof(struct treeRoot));
+
+    UITreeRoot->backgroundBranch = malloc(sizeof(struct itemDataNode));
+    UITreeRoot->backgroundBranch->firstItem = nullptr;
+    UITreeRoot->backgroundBranch->lastItem = nullptr;
+
+    UITreeRoot->middlegroundBranch = malloc(sizeof(struct itemDataNode));
+    UITreeRoot->middlegroundBranch->firstItem = nullptr;
+    UITreeRoot->middlegroundBranch->lastItem = nullptr;
+
+    UITreeRoot->foregroundBranch = malloc(sizeof(struct itemDataNode));
+    UITreeRoot->foregroundBranch->firstItem = nullptr;
+    UITreeRoot->foregroundBranch->lastItem = nullptr;
+
     return 0;
 }
 
-static unsigned int render_managerGetAvailableItemID(unsigned int layer) {
+[[maybe_unused]] static unsigned int render_managerGetAvailableItemID([[maybe_unused]]unsigned int layer) {
     unsigned int IDToReturn = nextItemIDAvailable;
     nextItemIDAvailable += 1;
     if (IDToReturn == INT_MAX) {
@@ -41,77 +48,70 @@ static unsigned int render_managerGetAvailableItemID(unsigned int layer) {
     return IDToReturn;
 }
 
-unsigned int render_managerAddItemToDraw(const unsigned int layer, const unsigned int subLayer, SDL_Texture *texturePtr, SDL_Surface *surfacePtr, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height) {
-    itemDataNode *currentNodeCheck = nullptr;
-    if (layer == 0) { currentNodeCheck = backgroundItemDataNode; }
-    else if (layer == 1) { currentNodeCheck = middlegroundItemDataNode; }
-    else if (layer == 2) { currentNodeCheck = foregroundItemDataNode; }
-    unsigned int itemID = render_managerGetAvailableItemID(layer);
-    while(true) {
-        if (currentNodeCheck->next == NULL) { // Always true when the ItemDataNode is empty (first node doesn't use any data other than '*next')
-            break;
-        } else if (currentNodeCheck->next->subLayer > subLayer) {
-            break;
-        } else {
-            currentNodeCheck = currentNodeCheck->next;
-        }
-    } // Out of the loop: got the node where to add this
-    itemDataNode *newItemDataNode = malloc(sizeof(itemDataNode));
-    newItemDataNode->subLayer = subLayer;
-    newItemDataNode->itemID = itemID;
+unsigned int render_managerAddItemToDraw(unsigned int layer, SDL_Texture *texturePtr, SDL_Surface *surfacePtr, unsigned int x, unsigned int y, unsigned int xSize, unsigned int ySize) {
+    struct firstBranch *lastItemDataNode = nullptr;
+    if (layer == 0) lastItemDataNode = UITreeRoot->backgroundBranch;
+    else if (layer == 1) lastItemDataNode = UITreeRoot->middlegroundBranch;
+    else if (layer == 2) lastItemDataNode = UITreeRoot->foregroundBranch;
+
+    struct itemDataNode *newItemDataNode = malloc(sizeof(struct itemDataNode));
+
+    if (lastItemDataNode->firstItem == nullptr) {
+        lastItemDataNode->firstItem = newItemDataNode;
+    } else {
+        lastItemDataNode->lastItem->next = newItemDataNode;
+    }
+    lastItemDataNode->lastItem = newItemDataNode;
+
     newItemDataNode->texturePtr = texturePtr;
     newItemDataNode->surfacePtr = surfacePtr;
     newItemDataNode->xCoord = x;
     newItemDataNode->yCoord = y;
-    newItemDataNode->width = width;
-    newItemDataNode->height = height;
-    newItemDataNode->next = currentNodeCheck->next;
-    currentNodeCheck->next = newItemDataNode;
-    return itemID;
+    newItemDataNode->xSize = xSize;
+    newItemDataNode->ySize = ySize;
+
+    return 0;
 }
 
-// TODO: If errors occured, return -1 (so of course, i need to check if errors occurred)
+// @TODO: If errors occurred, return -1 (so of course, i need to check if errors occurred)
 signed int render_managerDrawScene() {
     SDL_FRect currentRect;
-    const itemDataNode *currentItemDataNode =  nullptr;
-    unsigned int currentLayerDrawn;
+    SDL_Texture *texturePtr = nullptr;
+    struct itemDataNode *currentItemDataNode = nullptr;
+    unsigned int currentLayerDrawn = 0;
     
     SDL_RenderClear(globalRenderer);
-    if (backgroundItemDataNode->next == NULL) {
-        if (middlegroundItemDataNode->next == NULL) {
-            if (foregroundItemDataNode->next == NULL) {
-                return 0;
-            } else {
-                currentItemDataNode = foregroundItemDataNode->next;
-                currentLayerDrawn = 2;
-            }
-        } else {
-            currentItemDataNode = middlegroundItemDataNode->next;
-            currentLayerDrawn = 1;
-        }
-    } else {
-        currentItemDataNode = backgroundItemDataNode->next;
-        currentLayerDrawn = 0;
+    // Find first item to draw in this order: background -> middleground -> foreground
+
+    if (UITreeRoot->backgroundBranch->firstItem != nullptr) currentItemDataNode = UITreeRoot->backgroundBranch->firstItem;
+    else if (UITreeRoot->middlegroundBranch->firstItem != nullptr) currentItemDataNode = UITreeRoot->middlegroundBranch->firstItem;
+    else if (UITreeRoot->foregroundBranch->firstItem != nullptr) currentItemDataNode = UITreeRoot->foregroundBranch->firstItem;
+    else {
+        fprintf(stderr, "Error while rendering scene: NO ITEMS TO DRAW FOUND. Not fatal, breaking.\n");
+        return -1;
     }
 
+
     while (true) {
-        currentRect.x = currentItemDataNode->xCoord;
-        currentRect.y = currentItemDataNode->yCoord;
-        currentRect.w = currentItemDataNode->width;
-        currentRect.h = currentItemDataNode->height;
-        if (currentItemDataNode->texturePtr == NULL) {
-            SDL_Texture *texturePtr = SDL_CreateTextureFromSurface(globalRenderer, currentItemDataNode->surfacePtr);
-            SDL_RenderTexture(globalRenderer, texturePtr, NULL, &currentRect);
+        currentRect.x = (float)currentItemDataNode->xCoord;
+        currentRect.y = (float)currentItemDataNode->yCoord;
+        currentRect.w = (float)currentItemDataNode->xSize;
+        currentRect.h = (float)currentItemDataNode->ySize;
+        if (currentItemDataNode->texturePtr != NULL) {
+            SDL_RenderTexture(globalRenderer, currentItemDataNode->texturePtr, nullptr, &currentRect);
+        } else if (currentItemDataNode->surfacePtr != NULL){
+            texturePtr = SDL_CreateTextureFromSurface(globalRenderer, currentItemDataNode->surfacePtr);
+            SDL_RenderTexture(globalRenderer, texturePtr, nullptr, &currentRect);
         } else {
-            SDL_RenderTexture(globalRenderer, currentItemDataNode->texturePtr, NULL, &currentRect);
+            fprintf(stderr, "Error while rendering scene: SURFACE AND TEXTURE POINTERS CANNOT BOTH BE EMPTY. Not fatal, skipping.\n");
         }
-        if (currentItemDataNode->next == NULL) {
-            currentLayerDrawn += 1;
-            if (currentLayerDrawn == 1 && middlegroundItemDataNode->next != NULL) currentItemDataNode = middlegroundItemDataNode->next;
-            else if (currentLayerDrawn == 2 && foregroundItemDataNode->next != NULL) currentItemDataNode = foregroundItemDataNode->next;
-            else break;
-        } else {
+        if (currentItemDataNode->next != nullptr) {
             currentItemDataNode = currentItemDataNode->next;
+        } else {
+            currentLayerDrawn += 1;
+            if (currentLayerDrawn == 1 && UITreeRoot->middlegroundBranch->firstItem != nullptr) currentItemDataNode = UITreeRoot->middlegroundBranch->firstItem;
+            else if (currentLayerDrawn == 2 && UITreeRoot->foregroundBranch->firstItem != nullptr) currentItemDataNode = UITreeRoot->foregroundBranch->firstItem;
+            else break;
         }
     }
     // SDL_RenderPresent(globalRenderer);
@@ -119,33 +119,33 @@ signed int render_managerDrawScene() {
 }
 
 // TODO: Also check if errors occurred and do some more checks.
-signed int render_managerRemoveItem(unsigned int layer, unsigned int itemID) {
-    itemDataNode *currentItemDataNode = NULL;
-    if (layer == 0) { currentItemDataNode = backgroundItemDataNode; }
-    else if (layer == 1) { currentItemDataNode = middlegroundItemDataNode; }
-    else if (layer == 2) { currentItemDataNode = foregroundItemDataNode; };
-
-    itemDataNode *lastItemDataNode = NULL;
-    while(true) {
-        if (currentItemDataNode->itemID == itemID) {
-            if (currentItemDataNode->texturePtr != NULL) SDL_DestroyTexture(currentItemDataNode->texturePtr);
-            else SDL_DestroySurface(currentItemDataNode->surfacePtr);
-            // Cleaned the texture/surface from memory. Need to move the header
-            // if (currentItemDataNode == backgroundItemDataNode) { // @todo: Remove this condition because the item to remove cannot be the head of the NODE
-            //     backgroundItemDataNode = currentItemDataNode->next;
-            //     free(currentItemDataNode);
-            // }
-            lastItemDataNode->next = currentItemDataNode->next;
-            free(currentItemDataNode);
-            return 0;
-        } else if (currentItemDataNode->next != NULL) {
-            lastItemDataNode = currentItemDataNode;
-            currentItemDataNode = currentItemDataNode->next;
-        } else {
-            return -1;
-        }
-    }
-}
+// signed int render_managerRemoveItem(unsigned int layer, unsigned int itemID) {
+//     itemDataNode *currentItemDataNode = NULL;
+//     if (layer == 0) { currentItemDataNode = backgroundItemDataNode; }
+//     else if (layer == 1) { currentItemDataNode = middlegroundItemDataNode; }
+//     else if (layer == 2) { currentItemDataNode = foregroundItemDataNode; };
+//
+//     struct itemDataNode *lastItemDataNode = NULL;
+//     while(true) {
+//         if (currentItemDataNode->itemID == itemID) {
+//             if (currentItemDataNode->texturePtr != NULL) SDL_DestroyTexture(currentItemDataNode->texturePtr);
+//             else SDL_DestroySurface(currentItemDataNode->surfacePtr);
+//             // Cleaned the texture/surface from memory. Need to move the header
+//             // if (currentItemDataNode == backgroundItemDataNode) { // @todo: Remove this condition because the item to remove cannot be the head of the NODE
+//             //     backgroundItemDataNode = currentItemDataNode->next;
+//             //     free(currentItemDataNode);
+//             // }
+//             lastItemDataNode->next = currentItemDataNode->next;
+//             free(currentItemDataNode);
+//             return 0;
+//         } else if (currentItemDataNode->next != NULL) {
+//             lastItemDataNode = currentItemDataNode;
+//             currentItemDataNode = currentItemDataNode->next;
+//         } else {
+//             return -1;
+//         }
+//     }
+// }
 
 // TODO: This function may not be needed.
 signed int render_managerFuseTextures(SDL_Renderer *renderer, SDL_Texture *outputTexture, SDL_Texture *firstInputTexture, SDL_Texture *secondInputTexture, SDL_FRect *firstInputCoord, SDL_FRect *secondInputCoord, SDL_FRect *firstInputSRect, SDL_FRect *secondInputSRect) {
@@ -155,60 +155,60 @@ signed int render_managerFuseTextures(SDL_Renderer *renderer, SDL_Texture *outpu
     hasError = hasError | SDL_RenderTexture(renderer, firstInputTexture, firstInputSRect, firstInputCoord);
     hasError = hasError | SDL_RenderTexture(renderer, secondInputTexture, secondInputSRect, secondInputCoord);
     if (hasError != 0) {
-        printf("had an error during texture fusion\n");
+        fprintf(stderr, "Error while fusing textures\n");
         return -1;
     }
-    hasError = hasError ^ SDL_SetRenderTarget(renderer, NULL);
+    hasError = hasError ^ SDL_SetRenderTarget(renderer, nullptr);
     return hasError;
 }
 
 // TODO: Again, check if errors occurred...
 signed int render_managerDeleteScene() {
-    register itemDataNode *itemDataNodeToClear = backgroundItemDataNode->next;
-    while(1) {
-        if(itemDataNodeToClear == NULL) break;
-        register SDL_Texture *textureToDestroy = itemDataNodeToClear->texturePtr;
-        register SDL_Surface *surfaceToDestroy = itemDataNodeToClear->surfacePtr;
-        if(textureToDestroy) SDL_DestroyTexture(textureToDestroy);
-        else if (surfaceToDestroy) SDL_DestroySurface(itemDataNodeToClear->surfacePtr);
-        register itemDataNode *nextDataNode = itemDataNodeToClear->next;
-        free(itemDataNodeToClear);
-        itemDataNodeToClear = nextDataNode;
-        if(nextDataNode == NULL) break;
+    struct itemDataNode *itemDataNodeToClear = UITreeRoot->backgroundBranch->firstItem;
+    if (itemDataNodeToClear != nullptr) {
+        while(1) {
+            if(itemDataNodeToClear->texturePtr != nullptr) SDL_DestroyTexture(itemDataNodeToClear->texturePtr);
+            else if (itemDataNodeToClear->surfacePtr != nullptr) SDL_DestroySurface(itemDataNodeToClear->surfacePtr);
+            else fprintf(stderr, "Error while destroying/freeing texture/surface in backgroundBranch: NOT FOUND. Not fatal, continuing.");
+            struct itemDataNode *nextDataNode = itemDataNodeToClear->next;
+            free(itemDataNodeToClear);
+            if (itemDataNodeToClear == UITreeRoot->middlegroundBranch->lastItem) break;
+            itemDataNodeToClear = nextDataNode;
+        }
     }
-    itemDataNodeToClear = middlegroundItemDataNode->next;
-    while(1) {
-        if(itemDataNodeToClear == NULL) break;
-        register SDL_Texture *textureToDestroy = itemDataNodeToClear->texturePtr;
-        register SDL_Surface *surfaceToDestroy = itemDataNodeToClear->surfacePtr;
-        if(textureToDestroy) SDL_DestroyTexture(textureToDestroy);
-        else if (surfaceToDestroy) SDL_DestroySurface(itemDataNodeToClear->surfacePtr);
-        register itemDataNode *nextDataNode = itemDataNodeToClear->next;
-        free(itemDataNodeToClear);
-        itemDataNodeToClear = nextDataNode;
-        if(nextDataNode == NULL) break;
+    itemDataNodeToClear = UITreeRoot->middlegroundBranch->firstItem;
+    if (itemDataNodeToClear != nullptr) {
+        while(1) {
+            if(itemDataNodeToClear->texturePtr != nullptr) SDL_DestroyTexture(itemDataNodeToClear->texturePtr);
+            else if (itemDataNodeToClear->surfacePtr != nullptr) SDL_DestroySurface(itemDataNodeToClear->surfacePtr);
+            else fprintf(stderr, "Error while destroying/freeing texture/surface in middlegroundBranch: NOT FOUND. Not fatal, continuing.");
+            struct itemDataNode *nextDataNode = itemDataNodeToClear->next;
+            free(itemDataNodeToClear);
+            if (itemDataNodeToClear == UITreeRoot->middlegroundBranch->lastItem) break;
+            itemDataNodeToClear = nextDataNode;
+        }
     }
-    itemDataNodeToClear = foregroundItemDataNode->next;
-    while(1) {
-        if(itemDataNodeToClear == NULL) break;
-        register SDL_Texture *textureToDestroy = itemDataNodeToClear->texturePtr;
-        register SDL_Surface *surfaceToDestroy = itemDataNodeToClear->surfacePtr;
-        if(textureToDestroy) SDL_DestroyTexture(textureToDestroy);
-        else if (surfaceToDestroy) SDL_DestroySurface(itemDataNodeToClear->surfacePtr);
-        register itemDataNode *nextDataNode = itemDataNodeToClear->next;
-        free(itemDataNodeToClear);
-        itemDataNodeToClear = nextDataNode;
-        if(nextDataNode == NULL) break;
+    itemDataNodeToClear = UITreeRoot->foregroundBranch->firstItem;
+    if (itemDataNodeToClear != nullptr) {
+        while(1) {
+            if(itemDataNodeToClear->texturePtr != nullptr) SDL_DestroyTexture(itemDataNodeToClear->texturePtr);
+            else if (itemDataNodeToClear->surfacePtr != nullptr) SDL_DestroySurface(itemDataNodeToClear->surfacePtr);
+            else fprintf(stderr, "Error while destroying/freeing texture/surface in foregroundBranch: NOT FOUND. Not fatal, continuing.");
+            struct itemDataNode *nextDataNode = itemDataNodeToClear->next;
+            free(itemDataNodeToClear);
+            if (itemDataNodeToClear == UITreeRoot->middlegroundBranch->lastItem) break;
+            itemDataNodeToClear = nextDataNode;
+        }
     }
     // register SDL_Renderer *renderer = globalRenderer;
     // free(globalRenderer);
     // render_managerInit(renderer);
     nextItemIDAvailable = 1;
-    backgroundItemDataNode = malloc(sizeof(itemDataNode));
-    backgroundItemDataNode->next = nullptr; // The first textureDataNode will contain no data, used only as the head of the node.
-    middlegroundItemDataNode = malloc(sizeof(itemDataNode));
-    middlegroundItemDataNode->next = nullptr; // The first textureDataNode will contain no data, used only as the head of the node.
-    foregroundItemDataNode = malloc(sizeof(itemDataNode));
-    foregroundItemDataNode->next = nullptr; // The first textureDataNode will contain no data, used only as the head of the node.
+    UITreeRoot->backgroundBranch  ->lastItem    = nullptr;
+    UITreeRoot->backgroundBranch  ->firstItem   = nullptr;
+    UITreeRoot->middlegroundBranch->lastItem    = nullptr;
+    UITreeRoot->middlegroundBranch->firstItem   = nullptr;
+    UITreeRoot->foregroundBranch  ->lastItem    = nullptr;
+    UITreeRoot->foregroundBranch  ->firstItem   = nullptr;
     return 0;
 }

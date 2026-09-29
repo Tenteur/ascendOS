@@ -48,6 +48,9 @@ int main(const int argc, const char *argv[]) {
     long frameStartTime, frameTime; // ? // TODO: Move these variables
     double fps; // ? // TODO: Remove or move these variables
     char currentFPS[3];
+
+    bool printErrors = 1;
+    int savedStdErr = dup(STDERR_FILENO);
     
     // SDL_Rect FPSLocation = {650, 0, 150, 200}; // ? // TODO: Move or remove this variable
     // SDL_Rect backgroundColorBox = { 200, 150, 400, 300 }; // ? // TODO: Move or remove this variable
@@ -114,7 +117,7 @@ int main(const int argc, const char *argv[]) {
     // ! // TODO: Clean this mess, maybe create a function to remember each input and reactions.
     
     const char *hell = "/mnt/DataDisk/ascendOS/templates/basic.yml";
-    parse_yaml(hell);
+    // parse_yaml(hell);
     
     while (running) {
         SDL_Event event;
@@ -124,12 +127,13 @@ int main(const int argc, const char *argv[]) {
                 running = false;
             } else if (event.type == SDL_EVENT_KEY_DOWN) {
                 if(event.key.key == SDLK_SPACE) {
+                    addItemRect(255, 255, 255, 255, 100, 100, 0, 0);
 
                     numberOfSpacePressed += 1;
                     // char fuck[50] = "/mnt/DataDisk/ascendOS/templates/basic.yml";
                     printf("Parsing yaml file with space press number: %u\n", numberOfSpacePressed);
-                    render_managerDeleteScene();
-                    parse_yaml(hell);
+                    // render_managerDeleteScene();
+                    // parse_yaml(hell);
                     // SDL_Texture *secondText = generateTextTexture(renderer, hier, &SDLRedColor, 0, 0);
                     // SDL_Texture *firstText = generateTextTexture(renderer, hie, &SDLRedColor, 0, 0);
                     // printf("text success: %i\n", firstText && secondText);
@@ -161,6 +165,16 @@ int main(const int argc, const char *argv[]) {
                     printf("Modifying circle precision has been removed\n");
                 } else if (event.key.key == SDLK_L) {
                     printf("Modifying circle precision has been removed\n");
+                } else if (event.key.key == SDLK_S) {
+                    printErrors = printErrors ^ 1;
+                    if (printErrors) {
+                        printf("Enabling errors printing. (dup: %u)\n", savedStdErr);
+                        freopen("/dev/null", "w", stderr);
+
+                    } else {
+                        printf("Disabling errors printing\n");
+                        dup2(savedStdErr, STDERR_FILENO);
+                    }
                 }
             } else if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
                 printf("Mouse button DOWN, x: %f, y: %f, index: %i\n", event.button.x, event.button.y, event.button.button);

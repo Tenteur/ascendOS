@@ -344,24 +344,24 @@ int parse_events(yaml_parser_t parser, yaml_event_t event) {
 
 unsigned int addItemRect(int colorR, int colorG, int colorB, int colorA, int sizeX, int sizeY, int posX, int posY) {
     SDL_Surface *rectSurface = SDL_CreateSurface(sizeX, sizeY, SDL_PIXELFORMAT_RGBA8888);
-    if (rectSurface == NULL) return 0;
+    if (rectSurface == nullptr) return 0;
     const SDL_PixelFormatDetails *formatDetails = SDL_GetPixelFormatDetails(SDL_PIXELFORMAT_RGBA8888);
-    const Uint32 rectColor = SDL_MapRGBA(formatDetails, NULL, (Uint8)colorR, (Uint8)colorG, (Uint8)colorB, (Uint8)colorA);
-    SDL_FillSurfaceRect(rectSurface, NULL, rectColor);
+    const Uint32 rectColor = SDL_MapRGBA(formatDetails, nullptr, (Uint8)colorR, (Uint8)colorG, (Uint8)colorB, (Uint8)colorA);
+    SDL_FillSurfaceRect(rectSurface, nullptr, rectColor);
     SDL_Texture *rectTexture = SDL_CreateTextureFromSurface(interfaceRenderer, rectSurface);
     SDL_DestroySurface(rectSurface);
-    if (rectTexture == NULL) return 0;
-    unsigned int rectItemID = render_managerAddItemToDraw(1, 0, rectTexture, NULL, posX, posY, sizeX, sizeY);
+    if (rectTexture == nullptr) return 0;
+    unsigned int rectItemID = render_managerAddItemToDraw(1, rectTexture, nullptr, posX, posY, sizeX, sizeY);
     return rectItemID;
 }
 
 unsigned int addItemText(int colorR, int colorG, int colorB, int colorA, int sizeX, int sizeY, int posX, int posY, char *textContent, char *fontFamily, int fontSize) {
-    SDL_FColor textColor = {colorR, colorG, colorB, colorA};
+    SDL_FColor textColor = {(float)colorR, (float)colorG, (float)colorB, (float)colorA};
     if (selectFontFromList(fontFamily, fontSize) == -1) addFontToList(fontFamily, fontSize);
     SDL_Texture *textTexture = generateTextTexture(interfaceRenderer, textContent, &textColor, sizeX, sizeY);
     printf("text texture: %p", textTexture);
     // SDL_GetTextureSize()
-    unsigned int textItemID = render_managerAddItemToDraw(1, 0, textTexture, nullptr, posX, posY, 300, 300);
+    unsigned int textItemID = render_managerAddItemToDraw(1, textTexture, nullptr, posX, posY, 300, 300);
     return textItemID;
 }
 

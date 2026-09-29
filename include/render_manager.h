@@ -5,27 +5,36 @@
  * This script aim to simplify the rendering and keeping/destroying textures by managing them automatically.
  * Once this script is complete, should disallow the use of raw SDL2 rendering.
  */
+#pragma once
 
 #include <SDL3/SDL.h>
 #include <stdbool.h>
-
 
 
 /**
  * @brief This data structure stores all the information needed for rendering.
  * @param layer is where the item is drawn 
  */
-typedef struct itemDataNode {
-    unsigned int subLayer;
-    unsigned int itemID;
+struct itemDataNode {
     SDL_Texture *texturePtr;
     SDL_Surface *surfacePtr;
     unsigned int xCoord;
     unsigned int yCoord;
-    unsigned int width;
-    unsigned int height;
+    unsigned int xSize;
+    unsigned int ySize;
     struct itemDataNode *next;
-} itemDataNode;
+};
+
+struct firstBranch {
+    struct itemDataNode *firstItem;
+    struct itemDataNode *lastItem;
+};
+
+struct treeRoot {
+    struct firstBranch *backgroundBranch;
+    struct firstBranch *middlegroundBranch;
+    struct firstBranch *foregroundBranch;
+};
 
 /**
  * @brief Initialize all the needed variables and scripts for the render_manager.
@@ -51,11 +60,20 @@ signed int render_managerDrawScene();
  * @param surfacePtr The pointer to the surface to add, can be NULL (check note).
  * @param x The x coordinate where the texture gets drawn relative to screen (absolute so).
  * @param y The y coordinate where the texture gets drawn relative to screen (absolute so).
- * @param width The width of the item.
- * @param height The height of the item.
+ * @param xSize The width of the item.
+ * @param ySize The height of the item.
  * @return itemID > 0 if success, 0 if failure.
  */
-unsigned int render_managerAddItemToDraw(const unsigned int layer, const unsigned int subLayer, SDL_Texture *texturePtr, SDL_Surface *surfacePtr, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height);
+unsigned int render_managerAddItemToDraw(
+    unsigned int layer,
+    // unsigned int subLayer,
+    SDL_Texture *texturePtr,
+    SDL_Surface *surfacePtr,
+    unsigned int x,
+    unsigned int y,
+    unsigned int xSize,
+    unsigned int ySize
+    );
 /**
  * @brief Add a surface to draw to screen.
  * Add a texture to draw and return the id of this item relative to scene
@@ -114,7 +132,16 @@ signed int render_managerRemoveItem(unsigned int layer, unsigned int itemID);
  * @param firstInputSRect The texture coordinate of the first texture relative to the output texture (can be defaulted to NULL)
  * @param secondInputSRect The texture coordinate of the second texture relative to the output texture (can be defaulted to NULL)
  */
-signed int render_managerFuseTextures(SDL_Renderer *renderer, SDL_Texture *outputTexture, SDL_Texture *firstInputTexture, SDL_Texture *secondInputTexture, SDL_FRect *firstInputCoord, SDL_FRect *secondInputCoord, SDL_FRect *firstInputSRect, SDL_FRect *secondInputSRect);
+signed int render_managerFuseTextures(
+    SDL_Renderer *renderer,
+    SDL_Texture *outputTexture,
+    SDL_Texture *firstInputTexture,
+    SDL_Texture *secondInputTexture,
+    SDL_FRect *firstInputCoord,
+    SDL_FRect *secondInputCoord,
+    SDL_FRect *firstInputSRect,
+    SDL_FRect *secondInputSRect
+    );
 
 /**
  * @brief Removes every items from a scene, rendering it empty.
