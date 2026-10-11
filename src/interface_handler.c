@@ -110,7 +110,7 @@ int parse_yaml(const char *filename) {
 }
 
 // TODO: Switch to strtol.
-inline unsigned int conv(const yaml_char_t *value) {
+inline unsigned int convertYamlCharToUInt(const yaml_char_t *value) {
     // return strtol()
     // printf("%i", (int)value);
     // return atoi((char *)value);
@@ -168,28 +168,28 @@ int parse_properties(yaml_parser_t parser, yaml_event_t event) {
                         return -1;
                     }
                     yaml_parser_parse(&parser, &event);
-                    posX = conv(event.data.scalar.value);
+                    posX = convertYamlCharToUInt(event.data.scalar.value);
                     yaml_parser_parse(&parser, &event);
-                    posY = conv(event.data.scalar.value);
+                    posY = convertYamlCharToUInt(event.data.scalar.value);
                     yaml_parser_parse(&parser, &event); // Needed, else it SegFault
 
                 } else if (strcmp((char *) event.data.scalar.value, "fontSize") == 0) {
                     yaml_parser_parse(&parser, &event);
                     if (event.type != YAML_SCALAR_EVENT) return -1;
-                    fontSize = conv(event.data.scalar.value);
+                    fontSize = convertYamlCharToUInt(event.data.scalar.value);
                     // yaml_parser_parse(&parser, &event); // Needed, else it SegFault
 
                 } else if (strcmp((char *) event.data.scalar.value, "color") == 0) {
                     yaml_parser_parse(&parser, &event);
                     if (event.type != YAML_SEQUENCE_START_EVENT) return -1;
                     yaml_parser_parse(&parser, &event);
-                    colorR = conv(event.data.scalar.value);
+                    colorR = convertYamlCharToUInt(event.data.scalar.value);
                     yaml_parser_parse(&parser, &event);
-                    colorG = conv(event.data.scalar.value);
+                    colorG = convertYamlCharToUInt(event.data.scalar.value);
                     yaml_parser_parse(&parser, &event);
-                    colorB = conv(event.data.scalar.value);
+                    colorB = convertYamlCharToUInt(event.data.scalar.value);
                     yaml_parser_parse(&parser, &event); // Needed, else it SegFault
-                    colorA = conv(event.data.scalar.value);
+                    colorA = convertYamlCharToUInt(event.data.scalar.value);
                     yaml_parser_parse(&parser, &event); // Needed, else it SegFault
 
                 } else if (strcmp((char*)event.data.scalar.value, "fontFamily") == 0) {
@@ -208,9 +208,9 @@ int parse_properties(yaml_parser_t parser, yaml_event_t event) {
                     yaml_parser_parse(&parser, &event);
                     if (event.type == YAML_SEQUENCE_START_EVENT) {
                         yaml_parser_parse(&parser, &event);
-                        sizeX = conv(event.data.scalar.value);
+                        sizeX = convertYamlCharToUInt(event.data.scalar.value);
                         yaml_parser_parse(&parser, &event);
-                        sizeY = conv(event.data.scalar.value);
+                        sizeY = convertYamlCharToUInt(event.data.scalar.value);
                     } else if (event.type == YAML_SCALAR_EVENT) {
                         sizeX = 0;
                         sizeY = 0;

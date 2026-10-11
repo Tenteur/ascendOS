@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['main_0',['main',['../jsoncParser_8c.html#ae66f6b31b5ad750f1fe042a706a4e3d4',1,'main():&#160;jsoncParser.c'],['../main_8c.html#ad53223b8779f25caeddb70a3b9172967',1,'main(const int argc, const char *argv[]):&#160;main.c']]],
-  ['malloc_5ffn_1',['malloc_fn',['../structcJSON__Hooks.html#ae8fc738005f553ff03bc725c58d3188f',1,'cJSON_Hooks']]]
+  ['loadimageassurface_0',['loadImageAsSurface',['../images_8c.html#a53286ed4174cbec2325fb30925752736',1,'loadImageAsSurface(const char *imagePath):&#160;images.c'],['../images_8h.html#a53286ed4174cbec2325fb30925752736',1,'loadImageAsSurface(const char *imagePath):&#160;images.c']]],
+  ['loadimageastexture_1',['loadImageAsTexture',['../images_8c.html#a843e3d4e524c66654944d361a17c8a4a',1,'loadImageAsTexture(SDL_Renderer *renderer, const char *imagePath):&#160;images.c'],['../images_8h.html#a843e3d4e524c66654944d361a17c8a4a',1,'loadImageAsTexture(SDL_Renderer *renderer, const char *imagePath):&#160;images.c']]]
 ];

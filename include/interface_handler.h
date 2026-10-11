@@ -2,7 +2,7 @@
  * @file interface_handler.h
  * @brief This interface_handler (as his name suggest) manages all the interface and how they are being rendered.
  * @note Will need a lot more work to include everything, still a draft.
- * This code aims to translate a .jsonUI file to actual rendering by using images, text and all available means.
+ * This code aims to translate a .yaml file to actual rendering by using images, text and all available means.
  */
 #pragma once
 
@@ -44,6 +44,6 @@ int parse_events(yaml_parser_t parser, yaml_event_t event);
 
 unsigned int addItemRect(int colorR, int colorG, int colorB, int colorA, int sizeX, int sizeY, int posX, int posY);
 unsigned int addItemText(int colorR, int colorG, int colorB, int colorA, int sizeX, int sizeY, int posX, int posY, char *textContent, char *fontFamily, int fontSize);
-unsigned int conv(const yaml_char_t *value);
+unsigned int convertYamlCharToUInt(const yaml_char_t *value);
 
 int interface_handlerGenerateScene();

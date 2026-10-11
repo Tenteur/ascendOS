@@ -25,32 +25,34 @@
 
 #include <unistd.h>
 #include <stdio.h>
-// #include <libxml/tree.h>
 #include <linux/limits.h>
-// #include <libxml/parser.h>
 
-const SDL_FColor SDLRedColor = {255, 0, 0, 255};
-const SDL_FColor SDLGreenColor = {0, 255, 0, 255};
-const SDL_FColor SDLBlueColor = {0, 0, 255, 255};
+static const SDL_FColor SDLRedColor = {255, 0, 0, 255};
+static const SDL_FColor SDLGreenColor = {0, 255, 0, 255};
+static const SDL_FColor SDLBlueColor = {0, 0, 255, 255};
 
-constexpr int WINDOWWIDTH = 800;
-constexpr int WINDOWHEIGHT = 600;
+static constexpr int WINDOWWIDTH = 800;
+static constexpr int WINDOWHEIGHT = 600;
 
 int main(const int argc, const char *argv[]) {
 
-    // conv((yaml_char_t*) "1010");
-    // conv((yaml_char_t*) "toto10");
-    // conv((yaml_char_t*) "10toto10");
+    // convertYamlCharToUInt((yaml_char_t*) "1010");
+    // convertYamlCharToUInt((yaml_char_t*) "toto10");
+    // convertYamlCharToUInt((yaml_char_t*) "10toto10");
 
     // * INITIALIZING all the variables that are going to be used.
     // ! // FIXME: Maybe clean this area, some variables may be unused.
 
-    long frameStartTime, frameTime; // ? // TODO: Move these variables
+    printf("\033[31;1;4mHello\033[0m");
+
+    double frameStartTime, frameTime; // ? // TODO: Move these variables
     double fps; // ? // TODO: Remove or move these variables
     char currentFPS[3];
 
     bool printErrors = 1;
     int savedStdErr = dup(STDERR_FILENO);
+
+    float currentMouseX = 0, currentMouseY = 0;
     
     // SDL_Rect FPSLocation = {650, 0, 150, 200}; // ? // TODO: Move or remove this variable
     // SDL_Rect backgroundColorBox = { 200, 150, 400, 300 }; // ? // TODO: Move or remove this variable
@@ -67,7 +69,7 @@ int main(const int argc, const char *argv[]) {
 
     // * Variables definition finished. Initialization of SDL3
     
-    SDL_Init(SDL_INIT_VIDEO); // Init'ed: Video + Events
+    SDL_Init(SDL_INIT_VIDEO); // Initiated: Video + Events
     
     // struct SDL_DisplayMode screenInfo;
     // SDL_GetCurrentDisplayMode(&screenInfo);
@@ -91,9 +93,6 @@ int main(const int argc, const char *argv[]) {
     render_managerInit(renderer);
     interface_handlerInit(renderer);
     printf("%u\n", event_handlerInit());
-    // char template[15] = "example.jsonUI";
-    // char empty[15] = "interface.xml";
-    // interface_handlerGenerateScene(interface_handlerLoadScene(empty));
     
     
     bool running = true;
@@ -116,8 +115,8 @@ int main(const int argc, const char *argv[]) {
     
     // ! // TODO: Clean this mess, maybe create a function to remember each input and reactions.
     
-    const char *hell = "/mnt/DataDisk/ascendOS/templates/basic.yml";
-    // parse_yaml(hell);
+    const char *interfacePath = "/mnt/DataDisk/ascendOS/templates/basic.yml";
+    parse_yaml(interfacePath);
     
     while (running) {
         SDL_Event event;
@@ -127,19 +126,19 @@ int main(const int argc, const char *argv[]) {
                 running = false;
             } else if (event.type == SDL_EVENT_KEY_DOWN) {
                 if(event.key.key == SDLK_SPACE) {
-                    addItemRect(255, 255, 255, 255, 100, 100, 0, 0);
 
                     numberOfSpacePressed += 1;
                     // char fuck[50] = "/mnt/DataDisk/ascendOS/templates/basic.yml";
                     printf("Parsing yaml file with space press number: %u\n", numberOfSpacePressed);
-                    // render_managerDeleteScene();
-                    // parse_yaml(hell);
+                    render_managerDeleteScene();
+                    parse_yaml(interfacePath);
                     // SDL_Texture *secondText = generateTextTexture(renderer, hier, &SDLRedColor, 0, 0);
                     // SDL_Texture *firstText = generateTextTexture(renderer, hie, &SDLRedColor, 0, 0);
                     // printf("text success: %i\n", firstText && secondText);
                     // render_managerAddItemToDraw(2, 50, firstText, NULL, 100, 100, 239, 118);
                     // render_managerAddItemToDraw(2, 100, firstText, NULL, 100, 100, 239, 118);
                     // render_managerAddItemToDraw(2, 200, secondText, NULL, 200, 400, 114, 118);
+                    addItemRect(255, 255, 255, 255, 100, 100, currentMouseX, currentMouseY);
                 }
                 if (event.key.key== SDLK_RETURN) {
                     state = (state == STATE_LOGIN) ? STATE_HOME : STATE_LOGIN;
@@ -177,14 +176,16 @@ int main(const int argc, const char *argv[]) {
                     }
                 }
             } else if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
-                printf("Mouse button DOWN, x: %f, y: %f, index: %i\n", event.button.x, event.button.y, event.button.button);
-                printf("%u\n", checkItemBox(event.button.x, event.button.x, 1, 1, event.button.button));
+                printf("Mouse button DOWN, x: %f, y: %f, index: %i\n", currentMouseX, currentMouseY, event.button.button);
+                printf("%u\n", checkItemBox((int)currentMouseX, (int)currentMouseY, 1, 1, event.button.button));
             } else if (event.type == SDL_EVENT_MOUSE_BUTTON_UP) {
-                printf("Mouse button UP, x: %f, y: %f, index: %i\n", event.button.x, event.button.y, event.button.button);
-                printf("%u\n", checkItemBox(event.button.x, event.button.x, 1, 0, event.button.button));
+                printf("Mouse button UP, x: %f, y: %f, index: %i\n", currentMouseX, currentMouseY, event.button.button);
+                printf("%u\n", checkItemBox((int)currentMouseX, (int)currentMouseY, 1, 0, event.button.button));
             } else if (event.type == SDL_EVENT_MOUSE_MOTION) {
-                printf("Mouse moved, x: %f, y:%f\n", event.motion.x, event.motion.y);
-                printf("%u\n", checkItemBox(event.motion.x, event.motion.x, 0, 1, HOVER));
+                currentMouseX = event.motion.x;
+                currentMouseY = event.motion.y;
+                printf("Mouse moved, x: %f, y:%f\n", currentMouseX, currentMouseY);
+                printf("%u\n", checkItemBox((int)currentMouseX, (int)currentMouseY, 0, 1, HOVER));
             }
         }
 

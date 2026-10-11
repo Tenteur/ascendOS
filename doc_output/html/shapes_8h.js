@@ -1,6 +1,5 @@
 var shapes_8h =
 [
-    [ "drawCircleAtCoord", "shapes_8h.html#ab93c0d55d54ba404b5c423f272be267a", null ],
-    [ "drawRectAtCoord", "shapes_8h.html#a4586af345197744f807f5461a130826e", null ],
-    [ "drawSquareAtCoord", "shapes_8h.html#a16699c071294ee9486aa27450871aff0", null ]
+    [ "drawCircleAtCoord", "shapes_8h.html#a18c38cd40c3f8d98bbae496ab6c8af02", null ],
+    [ "drawRectAtCoord", "shapes_8h.html#a5ad8b3916382eb1c52be676714738656", null ]
 ];

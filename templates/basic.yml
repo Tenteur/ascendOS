@@ -5,10 +5,14 @@ root:
     position: [0, 0]
     size: [50, 50]
     color: [255, 75, 10, 255]
-    event:                                                             # When this section is commented
-      - eventType: onLeftClickDown                                     # When this section is commented
-        action: debugMsg,Hello world from debug message from the file! # When this section is commented
-
+#    event:                                                             # When this section is commented
+#      - eventType: onLeftClickDown                                     # When this section is commented
+#        action: debugMsg,Hello world from debug message from the file! # When this section is commented
+  - item:
+    type: rect
+    position: [40, 0]
+    size: [20, 85]
+    color: [255, 0, 100, 255]
 #  - item:
 #    type: rect
 #    position: [100, 100]

@@ -1,7 +1,6 @@
 var searchData=
 [
-  ['index_0',['index',['../cJSON_8h.html#a750b5d744c39a06bfb13e6eb010e35d0',1,'cJSON.h']]],
-  ['interfacerenderer_1',['interfaceRenderer',['../interface__handler_8c.html#a68800524561af7709e7d305eea773907',1,'interface_handler.c']]],
-  ['item_2',['item',['../cJSON_8h.html#ac76cea59d438ba893d2f82aabb367d14',1,'cJSON.h']]],
-  ['itemid_3',['itemID',['../structitemDataNode.html#a1f2d45f94f79e117230228d6566fcdff',1,'itemDataNode']]]
+  ['hitboxlisthead_0',['hitboxListHead',['../event__handler_8c.html#a1e585e4eb8ed888c56e24fc91e8e2f9e',1,'event_handler.c']]],
+  ['hooks_1',['hooks',['../structparse__buffer.html#a2c3e99b15da2935fc5d58124ffb4a894',1,'parse_buffer::hooks'],['../structprintbuffer.html#a43a8b3bcc644432f12f5aed5159d2520',1,'printbuffer::hooks']]],
+  ['hoverboxlisthead_2',['hoverboxListHead',['../event__handler_8c.html#a2135e5f6de86b22738705cf03789a3f4',1,'event_handler.c']]]
 ];

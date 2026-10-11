@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['generatetexttexture_0',['generateTextTexture',['../text_8c.html#a9409fb4689d807fc4ba4361bc3f36447',1,'generateTextTexture(SDL_Renderer *renderer, const char *text, const SDL_Color *textColor):&#160;text.c'],['../text_8h.html#a9409fb4689d807fc4ba4361bc3f36447',1,'generateTextTexture(SDL_Renderer *renderer, const char *text, const SDL_Color *textColor):&#160;text.c']]]
+  ['event_5fhandlerinit_0',['event_handlerInit',['../event__handler_8c.html#aa0c4d68aebd840f02d6b8384110b5281',1,'event_handlerInit():&#160;event_handler.c'],['../event__handler_8h.html#aa0c4d68aebd840f02d6b8384110b5281',1,'event_handlerInit():&#160;event_handler.c']]]
 ];
