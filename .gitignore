@@ -6,10 +6,9 @@ static/
 doxygen-awesome-css
 *.o
 *.log
-.vscode/tasks.json
-build/myapp
-.vscode/settings.json
 src/jsoncParser
 templates/example.json
-doc_output/*
 .groupedtimelineinclude
+/cmake-build-debug-coverage/
+/cmake-build-debug/
+/doc_output/
